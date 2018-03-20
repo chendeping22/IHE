@@ -1,0 +1,119 @@
+<template>
+			<div class="" v-loading="loading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading">
+				<div class="search-content">
+					<el-form ref="searchForm" :model="searchForm" :rules="searchRules" label-width="200px">
+						<el-row :gutter="12">
+							<el-col :span="12">
+								<el-form-item label="PatientId" prop="patientId">
+									<el-input v-model="searchForm.patientId" placeholder=""></el-input>
+								</el-form-item>
+							</el-col>
+							<el-col :span="12">
+								<el-form-item label="Status" prop="status">
+									<el-input v-model="searchForm.status" placeholder=""></el-input>
+								</el-form-item>
+							</el-col>
+						</el-row>
+						<el-row :gutter="12">
+							<el-col :span="12">
+								<el-form-item label="LastUpdateTimeFrom">
+									<el-row>
+										<el-col :span="2">
+											<el-checkbox></el-checkbox>
+										</el-col>
+										<el-col :span="22">
+											<el-date-picker style="width:100%;" v-model="searchForm.LastUpdateTimeFrom" type="date" placeholder="选择日期">
+											</el-date-picker>
+										</el-col>
+									</el-row>
+								</el-form-item>
+							</el-col>
+							<el-col :span="12">
+								<el-form-item label="LastUpdateTimeTo">
+									<el-row>
+										<el-col :span="2">
+											<el-checkbox></el-checkbox>
+										</el-col>
+										<el-col :span="22">
+											<el-date-picker style="width:100%;" v-model="searchForm.LastUpdateTimeTo" type="date" placeholder="选择日期">
+											</el-date-picker>
+										</el-col>
+									</el-row>
+								</el-form-item>
+							</el-col>
+						</el-row>
+						<el-row :gutter="12">
+							<el-col :span="12">
+								<el-form-item label="CodeList" prop="codeList">
+									<el-input v-model="searchForm.codeList" placeholder=""></el-input>
+								</el-form-item>
+							</el-col>
+							<el-col :span="12">
+							</el-col>
+						</el-row>
+					</el-form>
+					<div class="search-btn center">
+						<el-button type="primary" @click="search">确认</el-button>
+						<el-button type="info" plain @click="cancelForm('searchForm')">重置</el-button>
+					</div>
+				</div>
+				<div class="info-table">
+					<el-tabs v-model="activeName" type="border-card" @tab-click="handleClick">
+						<el-tab-pane label="文件夹" name="first">
+							<el-table :data="tableData" border style="width:100%; text-align: left;" height="250">
+								<el-table-column prop="date" label="文件夹需改时间">
+								</el-table-column>
+								<el-table-column prop="name" label="文件夹状态">
+								</el-table-column>
+								<el-table-column prop="address" label="文件夹唯一标识">
+								</el-table-column>
+								<el-table-column prop="address" label="EntryID">
+								</el-table-column>
+							</el-table>
+						</el-tab-pane>
+					</el-tabs>
+				</div>
+			</div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      value1: "",
+      tableData: [],
+      loading: false,
+      activeName: "first",
+      searchForm: {
+        patientId: "",
+        status: "",
+        lastUpdateTimeFrom: "",
+        lastUpdateTimeTo: "",
+        codeList: ""
+      },
+      searchRules: {
+        patientId: [],
+        status: [],
+        lastUpdateTimeFrom: [],
+        lastUpdateTimeTo: [],
+        codeList: []
+      }
+    };
+  },
+  created() {},
+  computed: {},
+  methods: {
+    search() {},
+    handleClick(tab, event) {},
+    cancelForm(formName) {
+      //取消编辑机构
+      // this.tableData = [];
+      this.reset(formName);
+    },
+    reset(form) {
+      //重置表单
+      this.$refs[form].resetFields();
+    }
+  }
+};
+</script>
