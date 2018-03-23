@@ -1,11 +1,10 @@
 html,body{
     height: 100%;
-    overflow: hidden;
+    font-weight: bold;
 }
 
 #app,.lw-container {
     height: 100%;
-    overflow: hidden;
     text-align: center
 }
 body {
@@ -19,27 +18,22 @@ select,
 textarea {
       font-family: "Microsoft YaHei","微软雅黑"
   }
-.lw-main {
-    height: 100% ;
-    background-color: #fbfdff;
-    overflow: hidden
-}
-
-.lw-main-container {
-    height: calc(100% - 64px);
-    background-color: #fbfdff;
-    overflow: auto
-}
 .center{
     text-align: center;
 }
 
 .el-card__header{
     padding: 10px 20px;
-    text-align: left
+    text-align: left;
+    border: none;
+    color: #457bc7
 }
 .el-card {
-  margin-bottom: 16px;
+  border: none;
+  box-shadow:none;
+  border-radius: 0;
+      border-right: 1px solid #ebeef5;
+    border-bottom: 1px solid #ebeef5;
 }
 
 .el-form-item {
@@ -76,6 +70,7 @@ textarea {
 
 .search-btn {
     margin-bottom: 16px;
+    margin-top: 16px
 }
 
 /* .el-button {
@@ -87,6 +82,7 @@ textarea {
 
 .el-tabs__header{
     margin-bottom:0;
+
 }
 .el-tabs--top.el-tabs--border-card .el-tabs__item:nth-child(2){
   padding-left: 10px;
@@ -102,3 +98,16 @@ textarea {
     margin-top:20px;
     margin-bottom:0
 }
+.el-collapse-item__header{
+    line-height: 36px;
+    height: 36px;
+    font-weight: bold;
+  }
+  .el-collapse-item__arrow{
+    line-height: 36px;
+  }
+ 
+  .el-radio{
+      height: 30px;
+      line-height: 30px
+  }

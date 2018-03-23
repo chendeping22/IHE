@@ -1,100 +1,98 @@
 
 <template>
-  <div>
-    <el-form ref="infoForm" :model="infoForm" :rules="infoRules" label-width="90px" class="form-wrap">
-      <el-row>
-        <el-col :span="24">
-          <el-card class="box-card" body-style="padding:10px">
-            <el-row>
-              <el-col :span="12">
-                <el-form-item label="systemAddr" prop="systemAddr" style="margin-bottom:0">
-                  <!-- <el-input v-model="infoForm.systemAddr"></el-input> -->
-                  <el-select v-model="value" placeholder="请选择" style="width:100%">
-                    <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                    </el-option>
-                  </el-select>
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item label="SOAP" prop="versionInfo" style="margin-bottom:0">
-                  <el-radio-group v-model="infoForm.versionInfo">
-                    <el-radio label="soap1.1">soap 1.1</el-radio>
-                    <el-radio label="soap1.2">soap 1.2</el-radio>
-                  </el-radio-group>
-                </el-form-item>
-              </el-col>
-            </el-row>
 
-          </el-card>
-        </el-col>
-      </el-row>
+  <div>
+    <v-param></v-param>
+    <el-form ref="infoForm" :model="infoForm" :rules="infoRules" label-width="100px">
       <el-row>
-        <el-col :span="12"  style="padding-right:10px">
-          <el-card class="box-card">
-            <!-- <div slot="header" class="clearfix">
-              <span>Patient</span>
-            </div> -->
-            <el-form-item label="PatientId" prop="patientId">
-              <el-input  v-model="infoForm.patientId"></el-input>
-            </el-form-item>
-            <el-form-item label="PatientInfo" prop="patientInfo">
-              <el-input v-model="infoForm.patientInfo">
-              </el-input>
-            </el-form-item>
-          </el-card>
+        <el-col :span="12">
           <el-card class="box-card clearmarginleft">
             <div slot="header" class="clearfix">
-              <span>ExtrinsicObject</span>
-              <!-- <el-button type="primary" icon="el-icon-refresh" style="float:right;padding: 4px 8px;width:50px"></el-button> -->
+              <span>Document</span>
             </div>
-            <template>
-              <el-tabs type="border-card" style="margin-bottom:16px">
-                <el-tab-pane label="FileName">
+            <el-form-item label="FileName" prop="FileName">
+              <el-upload class="upload-demo" drag action="https://jsonplaceholder.typicode.com/posts/" multiple>
+                <div class="el-upload__text">将文件拖到此处，或
+                  <em>点击上传</em>
+                </div>
+              </el-upload>
+            </el-form-item>
+            <el-form-item label="ExistDocId" prop="ExistDocId">
+              <el-input v-model="infoForm.ExistDocId">
+              </el-input>
+            </el-form-item>
+            <el-form-item prop="ExistDocId">
+              <el-radio-group v-model="radio2" style="float:left">
+                <el-radio :label="3">APND</el-radio>
+                <el-radio :label="6">RPLC</el-radio>
+                <el-radio :label="9">XFRM</el-radio>
+              </el-radio-group>
+              <el-button type="primary" icon="el-icon-document" @click="SendDocument('infoForm')">SendDocument</el-button>
+            </el-form-item>
+          </el-card>
+          <el-card class="box-card">
+            <div slot="header" class="clearfix">
+              <span>Folder</span>
+            </div>
+            <el-row>
+              <el-col :span="16">
+                <el-form-item label="UniqueId" prop="folderId">
+                  <el-input v-model="infoForm.folderId">
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-button type="primary" icon="el-icon-document" style="width:120px" @click="SendFolder('infoForm')">SendFolder</el-button>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="16">
+                <el-form-item label="ExistFolderId" prop="existFolderId">
+                  <el-input v-model="infoForm.existFolderId"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-button type="primary" icon="el-icon-document" style="width:170px" @click="SendFolderDocument('infoForm')">SendFolderDocument</el-button>
+              </el-col>
+            </el-row>
+          </el-card>
 
-                  <el-upload class="upload-demo" ref="upload" name="xdsbFile" :action="urlName.document.sendDocument" :auto-upload="false" :show-file-list="true" :data="xdsJson" :before-remove="beforeRemove" :before-upload="beforeUpload" multiple>
-                    <el-button type="primary">点击上传</el-button>
-                  </el-upload>
-                </el-tab-pane>
-                <el-tab-pane label="UniqueId">
-                  <el-form-item prop="extrinsicUniqueId">
-                    <el-input v-model="infoForm.extrinsicUniqueId" type="textarea" :autosize="{ minRows: 4, maxRows: 16}" placeholder="UniqueId">
-                    </el-input>
-                  </el-form-item>
+        </el-col>
+        <el-col :span="12">
 
-                </el-tab-pane>
-                <el-tab-pane label="ConfidentialityCode">
-                  <el-form-item prop="ConfidentialityCode">
-                    <el-input v-model="infoForm.ConfidentialityCode" type="textarea" :autosize="{ minRows: 4, maxRows: 16}" placeholder="ConfidentialityCode">
-                    </el-input>
-                  </el-form-item>
+          <el-card class="box-card">
+            <div slot="header" class="clearfix">
+              <span>patientInfo</span>
+            </div>
+            <el-form-item label="name" prop="name">
+              <el-input v-model="infoForm.name">
+              </el-input>
+            </el-form-item>
+            <el-col :span="12">
+              <el-form-item label="age" prop="age">
+                <el-input v-model="infoForm.age">
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="birthday" prop="birthday">
+                <el-date-picker v-model="value1" type="date" placeholder="选择日期" style="width:200px">
+                </el-date-picker>
+              </el-form-item>
+            </el-col>
 
-                </el-tab-pane>
-                <el-tab-pane label="ExistDocID">
-                  <el-form-item prop="existDocId">
-                    <el-input v-model="infoForm.existDocId" type="textarea" :autosize="{ minRows: 4, maxRows: 16}" placeholder="ExistDocID">
-                    </el-input>
-                  </el-form-item>
+            <el-form-item label="address" prop="address">
+              <el-input v-model="infoForm.address">
+              </el-input>
+            </el-form-item>
 
-                </el-tab-pane>
-                <el-tab-pane label="Associate">
-                  <el-form-item prop="extrinsicAssociate">
-                    <el-radio-group v-model="infoForm.extrinsicAssociate" style="margin-left:-90px">
-                      <el-radio label="APND">APND</el-radio>
-                      <el-radio label="RPLC">RPLC</el-radio>
-                      <el-radio label="XFRM">XFRM</el-radio>
-                    </el-radio-group>
-                  </el-form-item>
-                  <el-button type="primary" >清除</el-button>
-                </el-tab-pane>
-              </el-tabs>
-            </template>
-
-            <el-collapse v-model="activeNames">
-              <el-collapse-item title="AuthorExernal" name="1">
+          </el-card>
+          <el-row>
+            <el-col :span="12">
+              <el-card class="box-card" body-style="height: 238px;" style="border-right: none;">
+                <div slot="header" class="clearfix">
+                  <span>DocumentAuthorExernal</span>
+                </div>
                 <el-form-item label="Person" prop="extrinsicAuthorPerson">
                   <el-input v-model="infoForm.extrinsicAuthorPerson"></el-input>
                 </el-form-item>
@@ -107,63 +105,29 @@
                 <el-form-item label="Specialty" prop="extrinsicAuthorSpecialty">
                   <el-input v-model="infoForm.extrinsicAuthorSpecialty"></el-input>
                 </el-form-item>
-              </el-collapse-item>
-            </el-collapse>
-          </el-card>
-        </el-col>
-        <el-col :span="12" style="padding-left:10px">
-          <el-card class="box-card">
-            <div slot="header" class="clearfix">
-              <span>SubmissionSet</span>
-              <el-checkbox v-model="checked" style="float:right">Accessory</el-checkbox>
-            </div>
-            <el-form-item label="UniqueId" prop="submissionSetUniqueId">
-              <el-input v-model="infoForm.submissionSetUniqueId">
-                <el-button slot="append" icon="el-icon-refresh"></el-button>
-              </el-input>
-            </el-form-item>
-            <el-form-item label="SourceID" prop="submissionSetSourceId">
-              <el-input v-model="infoForm.submissionSetSourceId">
-              </el-input>
-            </el-form-item>
-            <el-collapse v-model="activeNames1">
-              <el-collapse-item title="AuthorExernal" name="1">
-                <el-form-item label="Person" prop="submissionSetAuthorPerson">
-                  <el-input v-model="infoForm.submissionSetAuthorPerson"></el-input>
+              </el-card>
+            </el-col>
+            <el-col :span="12">
+              <el-card class="box-card" body-style="height: 238px;">
+                <div slot="header" class="clearfix">
+                  <span>AssociationAuthorExernal</span>
+                </div>
+                <el-form-item label="Person" prop="extrinsicAuthorPerson">
+                  <el-input v-model="infoForm.extrinsicAuthorPerson"></el-input>
                 </el-form-item>
-                <el-form-item label="Institution" prop="submissionSetAuthorInstitution">
-                  <el-input v-model="infoForm.submissionSetAuthorInstitution"></el-input>
+                <el-form-item label="Institution" prop="extrinsicAuthorInstitution">
+                  <el-input v-model="infoForm.extrinsicAuthorInstitution"></el-input>
                 </el-form-item>
-                <el-form-item label="Role" prop="submissionSetAuthorRole">
-                  <el-input v-model="infoForm.submissionSetAuthorRole"></el-input>
+                <el-form-item label="Role" prop="extrinsicAuthorRole">
+                  <el-input v-model="infoForm.extrinsicAuthorRole"></el-input>
                 </el-form-item>
-                <el-form-item label="Specialty" prop="submissionSetAuthorSpecialty">
-                  <el-input v-model="infoForm.submissionSetAuthorSpecialty"></el-input>
+                <el-form-item label="Specialty" prop="extrinsicAuthorSpecialty">
+                  <el-input v-model="infoForm.extrinsicAuthorSpecialty"></el-input>
                 </el-form-item>
-              </el-collapse-item>
-            </el-collapse>
+              </el-card>
+            </el-col>
+          </el-row>
 
-          </el-card>
-
-          <el-card class="box-card">
-            <div slot="header" class="clearfix">
-              <span>Folder</span>
-            </div>
-            <el-form-item label="UniqueId" prop="folderId">
-              <el-input v-model="infoForm.folderId">
-                <el-button slot="append" icon="el-icon-refresh"></el-button>
-              </el-input>
-            </el-form-item>
-            <el-form-item label="ExistFolderId" prop="existFolderId">
-              <el-input v-model="infoForm.existFolderId"></el-input>
-            </el-form-item>
-
-          </el-card>
-          <el-form-item>
-            <el-button type="primary" icon="el-icon-document" style="margin-left: -90px;width:160px" @click="SendDocument('infoForm')">SendDocument</el-button>
-            <el-button type="primary" icon="el-icon-document" style="width:120px" @click="SendFolder('infoForm')">SendFolder</el-button>
-            <el-button type="primary" icon="el-icon-document" style="width:200px" @click="SendFolderDocument('infoForm')">SendFolderDocument</el-button>
-          </el-form-item>
         </el-col>
       </el-row>
 
@@ -176,6 +140,7 @@
   </div>
 </template>
 <script>
+import vParam from "../common/param";
 import { config, urlName } from "../../utils/config";
 import { urlTool } from "../../utils/common";
 export default {
@@ -189,16 +154,6 @@ export default {
       centerDialogVisible: false,
       activeNames: [],
       activeNames1: [],
-      options: [
-        {
-          value: "选项1",
-          label: "http://192.168.121.66:8080/wadoImage/upload"
-        },
-        {
-          value: "选项2",
-          label: "https://192.168.121.66:8080/wadoImage/upload"
-        }
-      ],
       value: "",
       infoForm: {
         // xdsJson:{
@@ -333,18 +288,18 @@ export default {
         if (valid) {
           console.log(self.$refs);
 
-          // let url = "/xdsb/sendDocument";
-          // let params = JSON.parse(JSON.stringify(self.infoForm));
+          let url = "/xdsb/sendDocument";
+          let params = JSON.parse(JSON.stringify(self.infoForm));
           // console.log(this.infoForm.extrinsicFileName);
           // delete params.folderId;
           // delete params.existFolderId;
           // this.xdsJson = params
           // console.log(this.xdsJson);
           self.$refs.upload.submit();
-          // console.log("SendDocument")
-          // self.$axios.post(url,this.xdsJson).then((res)=>{
-          //   console.log(res)
-          // })
+          console.log("SendDocument");
+          self.$axios.post(url, this.xdsJson).then(res => {
+            console.log(res);
+          });
         }
       });
     },
@@ -384,6 +339,9 @@ export default {
         }
       });
     }
+  },
+  components: {
+    vParam
   }
 };
 </script>
@@ -404,18 +362,41 @@ export default {
 .el-form-item {
   margin-bottom: 8px;
 }
-.el-collapse-item__header{
+.el-collapse-item__header {
   height: 36px;
-  line-height: 36px
+  line-height: 36px;
+  color: #457bc7;
 }
 </style>
 <style>
-.el-tabs--border-card>.el-tabs__content{
+.el-tabs--border-card > .el-tabs__content {
   height: 110px;
 }
-.el-collapse-item__header{
+/* .el-collapse-item__header {
   height: 36px;
-  line-height: 36px
+  line-height: 36px;
+} */
+.el-upload {
+  display: block;
+}
+.el-upload-dragger {
+  width: 100%;
+  height: auto;
+  border: none;
+}
+.el-upload-list {
+  /* height: 140px; */
+}
+.upload-demo {
+  border: 1px dashed #ccc;
+  border-radius: 6px;
+  height: 190px;
+}
+.el-card__body {
+  padding: 0 30px 10px 30px;
+}
+.el-collapse-item__arrow {
+  float: none;
 }
 </style>
 

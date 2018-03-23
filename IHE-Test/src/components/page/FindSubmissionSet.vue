@@ -15,7 +15,9 @@
 								</el-form-item>
 							</el-col>
 						</el-row>
-						<el-row :gutter="12">
+						 <el-collapse v-model="activeNames">
+              <el-collapse-item title="更多参数查询" name="1">
+               		<el-row :gutter="12">
 							<el-col :span="12">
 								<el-form-item label="AuthorPerson" prop="authorPerson">
 									<el-input v-model="searchForm.authorPerson" placeholder=""></el-input>
@@ -64,6 +66,9 @@
 								</el-form-item>
 							</el-col>
 						</el-row>
+              </el-collapse-item>
+            </el-collapse>
+				
 					</el-form>
 					<div class="search-btn center">
 						<el-button type="primary" @click="search">确认</el-button>

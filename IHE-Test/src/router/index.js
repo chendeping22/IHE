@@ -164,6 +164,13 @@ export default new Router({
           component: resolve => require(['../components/page/registryData.vue'], resolve),
         },
         {
+          path: '/log',
+          meta: {
+            headerActive: 'log'
+          },
+          component: resolve => require(['../components/page/log.vue'], resolve),
+        },
+        {
           path: '/imageFile',
           meta: {
             headerActive: 'imageFile'
