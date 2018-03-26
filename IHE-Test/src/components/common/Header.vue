@@ -41,7 +41,7 @@ export default {
           title: "注册库数据"
         },
         {
-          index: "serviceList",
+          index: "systemSet",
           title: "系统设置"
         }
       ]

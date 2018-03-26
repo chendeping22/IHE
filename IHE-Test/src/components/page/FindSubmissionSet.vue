@@ -3,20 +3,29 @@
 				<div class="search-content">
 
 					<el-form ref="searchForm" :model="searchForm" :rules="searchRules" label-width="200px">
-						<el-row :gutter="12">
-							<el-col :span="12">
-								<el-form-item label="PatientId" prop="patientId">
-									<el-input v-model="searchForm.patientId" placeholder=""></el-input>
-								</el-form-item>
-							</el-col>
-							<el-col :span="12">
-								<el-form-item label="Status" prop="status">
-									<el-input v-model="searchForm.status" placeholder=""></el-input>
-								</el-form-item>
-							</el-col>
-						</el-row>
+							<el-row>
+					<el-col :span="8">
+						<el-form-item label="PatientId" prop="patientId" label-width="100px">
+							<el-input v-model="searchForm.patientId" placeholder=""></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="5">
+						<el-form-item label="Status" prop="status" label-width="100px">
+							<el-select v-model="searchForm.status" placeholder="请选择" style="width:100%;">
+								<el-option label="Approved" value="urn:oasis:names:tc:ebxml-regrep:StatusType:Approved"></el-option>
+								<el-option label="Deprecated" value="urn:oasis:names:tc:ebxml-regrep:StatusType:Deprecated"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="5">
+						<div class="search-btn center">
+							<el-button type="primary" @click="FindDocument('searchForm')">确认</el-button>
+							<el-button type="info" plain @click="cancelForm('searchForm')">重置</el-button>
+						</div>
+					</el-col>
+				</el-row>
 						 <el-collapse v-model="activeNames">
-              <el-collapse-item title="更多参数查询" name="1">
+              <el-collapse-item title="" name="1">
                		<el-row :gutter="12">
 							<el-col :span="12">
 								<el-form-item label="AuthorPerson" prop="authorPerson">
@@ -70,10 +79,7 @@
             </el-collapse>
 				
 					</el-form>
-					<div class="search-btn center">
-						<el-button type="primary" @click="search">确认</el-button>
-						<el-button type="info" plain @click="cancelForm('searchForm')">重置</el-button>
-					</div>
+				
 				</div>
 				<div class="info-table">
 					<el-tabs v-model="activeName" type="border-card" @tab-click="handleClick">

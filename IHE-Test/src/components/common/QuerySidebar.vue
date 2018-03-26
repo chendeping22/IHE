@@ -1,8 +1,8 @@
 <template>
-  <el-aside style="width: 217px;">
+  <el-aside style="width: 202px;">
     <el-menu :default-active="onRoutes" class="el-menu-vertical-demo" @select="selectMenu">
       <template v-for="item in items">
-        <template v-if="item.children">
+        <template v-if="item.flag">
           <el-submenu :index="item.index" :key="item.index">
             <template slot="title">
               <span>{{ item.title }}</span>
@@ -11,6 +11,12 @@
               <span slot="title">{{ subItem.title }}</span>
             </el-menu-item>
           </el-submenu>
+        </template>
+        <template v-else>
+          <el-menu-item v-for="subItem in item.children" :index="subItem.index" :key="subItem.index">
+            <i :class="subItem.navIcon"></i>
+            <span slot="title">{{ subItem.title }}</span>
+          </el-menu-item>
         </template>
 
       </template>
@@ -24,26 +30,37 @@ export default {
     return {
       items: [
         {
-          title: "Find",
           index: "Find",
+          title: "Find",
+          flag: false,
           children: [
             {
               index: "findDocument",
-              title: "findDocument"
+              title: "findDocument",
+              navIcon:"el-icon-document"
             },
             {
               index: "findFolder",
-              title: "findFolder"
+              title: "findFolder",
+              navIcon:"el-icon-date"
             },
             {
               index: "findSubmissionSet",
-              title: "findSubmissionSet"
+              title: "findSubmissionSet",
+              navIcon:"el-icon-news"
+            },
+            {
+              index: "getAssociations",
+              title: "getAssociations",
+              navIcon:"el-icon-printer"
             }
           ]
         },
+
         {
-          title: "Get",
+          title: "更多",
           index: "Get",
+          flag: true,
           children: [
             {
               index: "getAll",
@@ -93,15 +110,6 @@ export default {
   created() {},
   computed: {
     onRoutes() {
-      // let str = "findDocument";
-      // for (let i = 0; i < this.items.length; i++) {
-      //   let patt = new RegExp(this.items[i].index);
-      //   if (patt.test(this.$route.path)) {
-      //     str = this.items[i].index;
-      //     break;
-      //   }else{}
-      // }
-      // console.log(this.$route.meta.sidebarActive);
       return this.$route.meta.sidebarActive;
     }
   },
@@ -135,7 +143,7 @@ export default {
 .el-menu-item {
   font-size: 14px;
   color: #768394;
-  text-align: center;
+  text-align: left;
 }
 
 .el-menu {

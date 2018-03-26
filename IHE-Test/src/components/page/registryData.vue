@@ -1,5 +1,6 @@
 <template>
-<div class="form-wrap">
+<el-container>
+<div class="form-wrap" style="width:100%">
 <el-button type="primary">刷新</el-button>
 <el-button type="primary">删除当前表数据</el-button>
 <el-tabs type="border-card">
@@ -150,6 +151,8 @@
    </el-tab-pane>
 </el-tabs>
 </div>
+</el-container>
+
 
 </template>
 <script>
@@ -169,5 +172,6 @@ export default {
   float: left;
   margin-bottom: 20px;
 }
+
 </style>
 

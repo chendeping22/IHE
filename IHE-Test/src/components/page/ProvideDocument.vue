@@ -1,141 +1,189 @@
 
 <template>
 
-  <div>
+  <div v-loading="loading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading">
     <v-param></v-param>
-    <el-form ref="infoForm" :model="infoForm" :rules="infoRules" label-width="100px">
+    <el-form ref="submitForm" :model="submitForm" :rules="submitRules" label-width="100px" class="form-wrap" style="padding-top:0">
       <el-row>
-        <el-col :span="12">
-          <el-card class="box-card clearmarginleft">
-            <div slot="header" class="clearfix">
-              <span>Document</span>
-            </div>
-            <el-form-item label="FileName" prop="FileName">
-              <el-upload class="upload-demo" drag action="https://jsonplaceholder.typicode.com/posts/" multiple>
-                <div class="el-upload__text">将文件拖到此处，或
-                  <em>点击上传</em>
-                </div>
-              </el-upload>
-            </el-form-item>
-            <el-form-item label="ExistDocId" prop="ExistDocId">
-              <el-input v-model="infoForm.ExistDocId">
+        <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <span>病人信息</span>
+          </div>
+          <el-col :span="12">
+            <el-form-item label="病人Id" prop="patientId">
+              <el-input v-model="submitForm.patientId">
               </el-input>
             </el-form-item>
-            <el-form-item prop="ExistDocId">
-              <el-radio-group v-model="radio2" style="float:left">
+          </el-col>
+          <el-col :span="12">
+            <el-row>
+              <el-col :span="12">
+                <el-form-item label="姓" prop="firstName">
+                  <el-input v-model="submitForm.firstName">
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="名" prop="lastName">
+                  <el-input v-model="submitForm.lastName">
+                  </el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="地址" prop="address">
+              <el-input v-model="submitForm.address">
+              </el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-row>
+              <el-col :span="12">
+                <el-form-item label="年龄" prop="age">
+                  <el-input v-model="submitForm.age">
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="生日" prop="birthday">
+                  <el-date-picker v-model="submitForm.birthday" type="date" placeholder="选择日期">
+                  </el-date-picker>
+                </el-form-item>
+              </el-col>
+            </el-row>
+
+          </el-col>
+        </el-card>
+
+      </el-row>
+      <el-row>
+        <el-card class="box-card" style="border-right: none;">
+          <div slot="header" class="clearfix">
+            <span>文档作者信息</span>
+          </div>
+          <el-col :span="6">
+            <el-form-item label="姓名" prop="extrinsicAuthorPerson">
+              <el-input v-model="submitForm.extrinsicAuthorPerson"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="机构" prop="extrinsicAuthorInstitution">
+              <el-input v-model="submitForm.extrinsicAuthorInstitution"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="角色" prop="extrinsicAuthorRole">
+              <el-input v-model="submitForm.extrinsicAuthorRole"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="专业" prop="extrinsicAuthorSpecialty">
+              <el-input v-model="submitForm.extrinsicAuthorSpecialty"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-card>
+      </el-row>
+      <el-row>
+        <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <span>提交集作者信息</span>
+          </div>
+          <el-col :span="6">
+            <el-form-item label="姓名" prop="submissionSetAuthorPerson">
+              <el-input v-model="submitForm.submissionSetAuthorPerson"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="机构" prop="submissionSetAuthorInstitution">
+              <el-input v-model="submitForm.submissionSetAuthorInstitution"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="角色" prop="submissionSetAuthorRole">
+              <el-input v-model="submitForm.submissionSetAuthorRole"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="专业" prop="submissionSetAuthorSpecialty">
+              <el-input v-model="submitForm.submissionSetAuthorSpecialty"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-card>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+
+          <el-card class="box-card" body-style="padding-right: 0;">
+            <div slot="header" class="clearfix">
+              <span>文档</span>
+            </div>
+            
+              <el-row>
+                <el-col :span="20">
+                  <el-tabs type="border-card">
+                    <el-tab-pane label="文件名">
+                <el-upload class="upload-demo" ref="upload" drag name="xdsbFile" action="urlName.document.sendDocument" :auto-upload="false" :show-file-list="true" :data="xdsJson" :on-error="onError" :before-remove="beforeRemove" :before-upload="beforeUpload" multiple>
+                  <div class="el-upload__text">将文件拖到此处，或
+                    <em>点击上传</em>
+                  </div>
+                </el-upload>
+              </el-tab-pane>
+              <el-tab-pane label="存在文档ID" style="padding: 12px;">
+                <el-input v-model="submitForm.existDocId">
+                </el-input>
+              </el-tab-pane>
+                   </el-tabs>
+                </el-col>
+                <el-col :span="4">
+                    <el-button type="primary" style="width:80px;margin-top:30px" @click="SendDocument('submitForm')">CreateKO</el-button>
+              <el-button type="primary" style="width:80px;margin-left:0;margin-top:30px" @click="SendDocument('submitForm')">OpenKO</el-button>
+ 
+                </el-col>
+              </el-row>
+             
+       
+
+              <el-radio-group v-model="submitForm.extrinsicAssociate" style="float:left;margin-top:8px">
                 <el-radio :label="3">APND</el-radio>
                 <el-radio :label="6">RPLC</el-radio>
                 <el-radio :label="9">XFRM</el-radio>
               </el-radio-group>
-              <el-button type="primary" icon="el-icon-document" @click="SendDocument('infoForm')">SendDocument</el-button>
-            </el-form-item>
+              <el-button type="primary" icon="el-icon-document" style="width:170px;margin-top:8px;float: right;" @click="SendDocument('submitForm')">SendDocument</el-button>
+              <el-button type="primary" icon="el-icon-document" style="width:170px;margin-top:8px;" @click="SendDocument('submitForm')">SendDocument-I</el-button>
+ 
           </el-card>
-          <el-card class="box-card">
+        </el-col>
+        <el-col :span="12">
+          <el-card class="box-card" body-style="padding-left: 0;">
             <div slot="header" class="clearfix">
-              <span>Folder</span>
+              <span>文件夹</span>
             </div>
             <el-row>
               <el-col :span="16">
-                <el-form-item label="UniqueId" prop="folderId">
-                  <el-input v-model="infoForm.folderId">
+                <el-form-item label="文件夹ID" prop="folderId">
+                  <el-input v-model="submitForm.folderId">
                   </el-input>
                 </el-form-item>
               </el-col>
-              <el-col :span="6">
-                <el-button type="primary" icon="el-icon-document" style="width:120px" @click="SendFolder('infoForm')">SendFolder</el-button>
+              <el-col :span="8">
+                <el-button type="primary" icon="el-icon-document" style="width:170px;float: right;" @click="SendFolder('submitForm')">SendFolder</el-button>
               </el-col>
             </el-row>
             <el-row>
               <el-col :span="16">
-                <el-form-item label="ExistFolderId" prop="existFolderId">
-                  <el-input v-model="infoForm.existFolderId"></el-input>
+                <el-form-item label="已存在文件ID" prop="existFolderId">
+                  <el-input v-model="submitForm.existFolderId"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-button type="primary" icon="el-icon-document" style="width:170px" @click="SendFolderDocument('infoForm')">SendFolderDocument</el-button>
+                <el-button type="primary" icon="el-icon-document" style="width:170px;float: right;" @click="SendFolderDocument('submitForm')">SendFolderDocument</el-button>
               </el-col>
             </el-row>
           </el-card>
-
-        </el-col>
-        <el-col :span="12">
-
-          <el-card class="box-card">
-            <div slot="header" class="clearfix">
-              <span>patientInfo</span>
-            </div>
-            <el-form-item label="name" prop="name">
-              <el-input v-model="infoForm.name">
-              </el-input>
-            </el-form-item>
-            <el-col :span="12">
-              <el-form-item label="age" prop="age">
-                <el-input v-model="infoForm.age">
-                </el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="birthday" prop="birthday">
-                <el-date-picker v-model="value1" type="date" placeholder="选择日期" style="width:200px">
-                </el-date-picker>
-              </el-form-item>
-            </el-col>
-
-            <el-form-item label="address" prop="address">
-              <el-input v-model="infoForm.address">
-              </el-input>
-            </el-form-item>
-
-          </el-card>
-          <el-row>
-            <el-col :span="12">
-              <el-card class="box-card" body-style="height: 238px;" style="border-right: none;">
-                <div slot="header" class="clearfix">
-                  <span>DocumentAuthorExernal</span>
-                </div>
-                <el-form-item label="Person" prop="extrinsicAuthorPerson">
-                  <el-input v-model="infoForm.extrinsicAuthorPerson"></el-input>
-                </el-form-item>
-                <el-form-item label="Institution" prop="extrinsicAuthorInstitution">
-                  <el-input v-model="infoForm.extrinsicAuthorInstitution"></el-input>
-                </el-form-item>
-                <el-form-item label="Role" prop="extrinsicAuthorRole">
-                  <el-input v-model="infoForm.extrinsicAuthorRole"></el-input>
-                </el-form-item>
-                <el-form-item label="Specialty" prop="extrinsicAuthorSpecialty">
-                  <el-input v-model="infoForm.extrinsicAuthorSpecialty"></el-input>
-                </el-form-item>
-              </el-card>
-            </el-col>
-            <el-col :span="12">
-              <el-card class="box-card" body-style="height: 238px;">
-                <div slot="header" class="clearfix">
-                  <span>AssociationAuthorExernal</span>
-                </div>
-                <el-form-item label="Person" prop="extrinsicAuthorPerson">
-                  <el-input v-model="infoForm.extrinsicAuthorPerson"></el-input>
-                </el-form-item>
-                <el-form-item label="Institution" prop="extrinsicAuthorInstitution">
-                  <el-input v-model="infoForm.extrinsicAuthorInstitution"></el-input>
-                </el-form-item>
-                <el-form-item label="Role" prop="extrinsicAuthorRole">
-                  <el-input v-model="infoForm.extrinsicAuthorRole"></el-input>
-                </el-form-item>
-                <el-form-item label="Specialty" prop="extrinsicAuthorSpecialty">
-                  <el-input v-model="infoForm.extrinsicAuthorSpecialty"></el-input>
-                </el-form-item>
-              </el-card>
-            </el-col>
-          </el-row>
-
         </el-col>
       </el-row>
-
     </el-form>
-    <el-dialog title="imageFile" :visible.sync="centerDialogVisible" width="90%" append-to-body center>
-      <iframe id="container">
-      </iframe>
-    </el-dialog>
 
   </div>
 </template>
@@ -149,14 +197,8 @@ export default {
       url: config.url,
       urlName: urlName,
       urlTool: urlTool,
-      flag: true,
       fileList: [],
-      centerDialogVisible: false,
-      activeNames: [],
-      activeNames1: [],
-      value: "",
-      infoForm: {
-        // xdsJson:{
+      submitForm: {
         patientId: "", //注册的病人ID,必须为注册库中已有的ID提交才有效
         patientInfo: "", //病人基本信息
         existDocId: "", //已存在的文档UniqueId，界面输入，初值为“”，当对某一个文档进行追加、替换、或者转换操作时，传入已存在的文档的唯一标识
@@ -176,13 +218,12 @@ export default {
         extrinsicFileName: "", //提交的文档名称（全路径名）
         versionInfo: "soap1.2", //SOAP版本号；0：soap 1.1; 1:soap1.2，前台可以传一个版本控制的参数给后台，后台自己决定要不要用这个参数。我们测试默认的版本是soap1.2
         folderId: "", //创建的新文件夹的UniqueId，不能重复
-        existFolderId: "", //已存在的文件夹UniqueId，往已存在的文件夹提交文档时必填，参数FolderId和ExistFolderId二选一
-        systemAddr: "http://192.168.121.66:8080/wadoImage/upload"
-        // }
+        existFolderId: "" //已存在的文件夹UniqueId，往已存在的文件夹提交文档时必填，参数FolderId和ExistFolderId二选一
       },
       xdsJson: {},
-      infoRules: {},
-      // infoRules: {
+      fileBlob: "",
+      submitRules: {}
+      // submitRules: {
       //   patientId: [
       //     {
       //       required: true,
@@ -218,6 +259,13 @@ export default {
       //       tigger: "blur"
       //     }
       //   ],
+      //   extrinsicAssociate: [
+      //     {
+      //       required: true,
+      //       message: "extrinsicAssociate",
+      //       tigger: "blur"
+      //     }
+      //   ],
       //   extrinsicFileName: [
       //     {
       //       required: true,
@@ -240,62 +288,43 @@ export default {
       //     }
       //   ]
       // },
-      // activeName: "FileName",
-      checked: true
     };
   },
   methods: {
-    // uploadError(err, file, fileList) {
-    //   console.log(err, file, fileList);
-    // },
-    // handleAvatarSuccess(response, file, fileList) {
-    //   console.log(response, file, fileList);
-    //   this.centerDialogVisible = true;
-    //   this.$nextTick(function(){
-    //     document.getElementById("container").contentDocument.body.innerHTML=response
-    //   });
-    // },
+    onError(err, file, fileList) {
+      return this.$confirm(`文件上传失败`);
+    },
     beforeUpload(file) {
       console.log(file);
-      //this.infoForm.extrinsicFileName=file.name;
-      console.log(this.infoForm.extrinsicFileName);
-      var url = null;
+      //分离出文件的blob对象（文件的二进制流数据）
       if (window.createObjcectURL != undefined) {
-        url = window.createOjcectURL(file);
+        this.fileBlob = window.createOjcectURL(file);
       } else if (window.URL != undefined) {
-        url = window.URL.createObjectURL(file);
+        this.fileBlob = window.URL.createObjectURL(file);
       } else if (window.webkitURL != undefined) {
-        url = window.webkitURL.createObjectURL(file);
+        this.fileBlob = window.webkitURL.createObjectURL(file);
       }
-      let params = JSON.parse(JSON.stringify(this.infoForm));
-      this.infoForm.extrinsicFileName = url;
-      console.log(this.infoForm.extrinsicFileName);
-      delete params.folderId;
-      delete params.existFolderId;
-      // this.xdsJson['xdsJson'] = JSON.stringify(params);
-      this.xdsJson = params;
-      console.log(this.xdsJson);
+      console.log("fileBlob");
+      console.log(this.fileBlob);
     },
     beforeRemove(file, fileList) {
       return this.$confirm(`确定移除 ${file.name}？`);
-    },
-    onEeceed(files, fileList) {
-      this.$message.warning(`一次只能上传一个文件！`);
     },
     SendDocument(formName) {
       const self = this;
       self.$refs[formName].validate(valid => {
         if (valid) {
           console.log(self.$refs);
-
           let url = "/xdsb/sendDocument";
-          let params = JSON.parse(JSON.stringify(self.infoForm));
-          // console.log(this.infoForm.extrinsicFileName);
-          // delete params.folderId;
-          // delete params.existFolderId;
-          // this.xdsJson = params
-          // console.log(this.xdsJson);
           self.$refs.upload.submit();
+          //深拷贝，改变params对象属性，submitForm不受影响
+          let params = JSON.parse(JSON.stringify(this.submitForm));
+          params.extrinsicFileName = this.fileBlob;
+          console.log(this.submitForm.extrinsicFileName);
+          delete params.folderId;
+          delete params.existFolderId;
+          this.xdsJson = params;
+          console.log(this.xdsJson);
           console.log("SendDocument");
           self.$axios.post(url, this.xdsJson).then(res => {
             console.log(res);
@@ -308,7 +337,7 @@ export default {
       self.$refs[formName].validate(valid => {
         if (valid) {
           let url = self.urlTool(self.url, urlName.document.sendFolder);
-          let params = JSON.parse(JSON.stringify(self.infoForm));
+          let params = JSON.parse(JSON.stringify(self.submitForm));
           delete params.existDocId;
           delete params.extrinsicUniqueId;
           delete params.extrinsicConfidentialityCode;
@@ -319,10 +348,11 @@ export default {
           delete params.extrinsicAuthorSpecialty;
           delete params.extrinsicFileName;
           delete params.existFolderId;
-          console.log(params);
-          // self.$axios.post(url,params).then((res)=>{
-
-          // })
+          this.xdsJson = params;
+          console.log(this.xdsJson);
+          self.$axios.post(url, this.xdsJson).then(res => {
+            console.log(res);
+          });
         }
       });
     },
@@ -331,11 +361,13 @@ export default {
       self.$refs[formName].validate(valid => {
         if (valid) {
           let url = self.urlTool(self.url, urlName.document.sendFolderDocumnet);
-          let params = JSON.parse(JSON.stringify(self.infoForm));
-          console.log(params);
-          // self.$axios.post(url,params).then((res)=>{
-
-          // })
+          self.$refs.upload.submit();
+          let params = JSON.parse(JSON.stringify(self.submitForm));
+          this.xdsJson = params;
+          console.log(this.xdsJson);
+          self.$axios.post(url, this.xdsJson).then(res => {
+            console.log(res);
+          });
         }
       });
     }
@@ -346,58 +378,7 @@ export default {
 };
 </script>
 <style scoped>
-/* .el-card__header {
-  padding: 0;
-  text-align: left;
-} */
 
-.clearmarginleft .el-textarea {
-  margin-left: -90px;
-  width: 120%;
-}
-/* .el-col {
-  padding-right: 10px;
-  padding-left: 10px;
-} */
-.el-form-item {
-  margin-bottom: 8px;
-}
-.el-collapse-item__header {
-  height: 36px;
-  line-height: 36px;
-  color: #457bc7;
-}
-</style>
-<style>
-.el-tabs--border-card > .el-tabs__content {
-  height: 110px;
-}
-/* .el-collapse-item__header {
-  height: 36px;
-  line-height: 36px;
-} */
-.el-upload {
-  display: block;
-}
-.el-upload-dragger {
-  width: 100%;
-  height: auto;
-  border: none;
-}
-.el-upload-list {
-  /* height: 140px; */
-}
-.upload-demo {
-  border: 1px dashed #ccc;
-  border-radius: 6px;
-  height: 190px;
-}
-.el-card__body {
-  padding: 0 30px 10px 30px;
-}
-.el-collapse-item__arrow {
-  float: none;
-}
 </style>
 
 

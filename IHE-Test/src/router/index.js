@@ -5,10 +5,6 @@ Vue.use(Router)
 
 export default new Router({
   routes: [
-    // {
-    //   path: '/',
-    //   redirect: '/provideDocument'
-    // },
     {
       path: '/404',
       meta: {
@@ -150,11 +146,38 @@ export default new Router({
           ]
         },
         {
-          path: '/serviceList',
+          path: '/systemSet',
           meta: {
-            headerActive: 'serviceList'
+            headerActive: 'systemSet'
           },
-          component: resolve => require(['../components/page/serviceList.vue'], resolve),
+          redirect: '/serverList',
+          component: resolve => require(['../components/page/systemContainer.vue'], resolve),
+          children:[
+            {
+              path: '/serverList',
+              meta: {
+                headerActive: 'systemSet',
+                sidebarActive: 'serverList',
+              },
+              component: resolve => require(['../components/page/serverList.vue'], resolve),
+            },
+            {
+              path: '/submitSet',
+              meta: {
+                headerActive: 'systemSet',
+                sidebarActive: 'submitSet',
+              },
+              component: resolve => require(['../components/page/submitSet.vue'], resolve),
+            },
+            {
+              path: '/otherSet',
+              meta: {
+                headerActive: 'systemSet',
+                sidebarActive: 'otherSet',
+              },
+              component: resolve => require(['../components/page/otherSet.vue'], resolve),
+            },
+          ]
         },
         {
           path: '/registryData',
