@@ -25,11 +25,11 @@ module.exports = {
       //       '^/xdsb/sendDocument': '/xdsb/sendDocument'
       //     }
       // },
-      '/xdsb':{
-        target:'http://192.168.121.49:8080',
+      '/source/sendDoc':{
+        target:'http://192.168.121.66:8080',
         changeOrigin: true,
           pathRewrite: {
-            '^/xdsb': '/xdsb'
+            'source/sendDoc': 'source/sendDoc'
           }
       },
     },

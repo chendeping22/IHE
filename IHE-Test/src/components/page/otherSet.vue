@@ -82,13 +82,13 @@
               <span>文档ConfidentialityType</span>
             </div>
 
-            <el-form-item prop="OriginalStatus" class="radio">
-              <el-radio-group v-model="OriginalStatus">
+            <el-form-item prop="ConfidentialityType" class="radio">
+              <el-radio-group v-model="ConfidentialityType">
                 <el-radio label="Approved">Normal</el-radio>
                 <el-radio label="Deprecated">Restricted</el-radio>
                 <el-radio label="Deleted">Very Restricted</el-radio>
               </el-radio-group>
-              <el-checkbox v-model="checked" style="margin-left:30px">OPT-IN</el-checkbox>
+              <el-checkbox v-model="checked1" style="margin-left:30px">OPT-IN</el-checkbox>
             </el-form-item>
 
           </el-card>
@@ -118,7 +118,7 @@
             </div>
 
             <el-form-item prop="OriginalStatus" class="radio">
-              <el-radio-group v-model="returntype">
+              <el-radio-group v-model="returntype2">
                 <el-radio label="Approved">LeafClass</el-radio>
                 <el-radio label="Deprecated">ObjectRef</el-radio>
               </el-radio-group>
@@ -143,7 +143,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="4">
-                <el-checkbox v-model="checked">Reply</el-checkbox>
+                <el-checkbox v-model="checked2">Reply</el-checkbox>
               </el-col>
             </el-row>
             <el-form-item label="文件保存路径" prop="NewStatus">
@@ -161,7 +161,7 @@
             <div slot="header" class="clearfix">
               <span>SSL/TLS Version</span>
             </div>
-            <el-radio-group v-model="returntype">
+            <el-radio-group v-model="Version">
                 <el-radio label="SSLv2">SSLv2</el-radio>
                 <el-radio label="SSLv23">SSLv23</el-radio>
                  <el-radio label="SSLv3">SSLv3</el-radio>
@@ -184,6 +184,12 @@ export default {
   data() {
     return {
       loading: false,
+      checked1:true,
+      checked2:true,
+      returntype:"",
+      returntype2:"",
+      Version:"",
+      ConfidentialityType:"",
       otherSetForm: {
         Lid: "",
         DocumentId: "",

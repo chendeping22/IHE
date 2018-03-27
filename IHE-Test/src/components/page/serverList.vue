@@ -77,6 +77,7 @@
 export default {
   data() {
     return {
+      loading:false,
       tableData: [
         {
           manuFacturer: "蓝网",

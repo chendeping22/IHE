@@ -23,7 +23,7 @@
 						</div>
 					</el-col>
 				</el-row>
-				<el-collapse v-model="activeNames">
+				<el-collapse v-model="activeName">
 					<el-collapse-item title="" name="1">
 						<el-row>
 							<el-col :span="12">
@@ -175,8 +175,8 @@ export default {
       activeName: "first",
       xdsJson: {},
       tableData: [
-       
-      ],
+			],
+			activeNames:"",
       searchForm: {
         patientId: "",
         status: "",

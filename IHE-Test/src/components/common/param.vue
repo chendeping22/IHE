@@ -3,15 +3,15 @@
     <el-collapse-item title="通讯参数配置" name="1">
       <el-form ref="paramSetform" :model="paramSetform" label-width="100px">
         <el-col :span="5" :offset="1">
-          <el-form-item label="文档库" prop="documentURL" style="text-align:left;">
-            <el-select v-model="paramSetform.documentURL" placeholder="请选择文档库">
+          <el-form-item label="文档库" prop="repository_Url" style="text-align:left;">
+            <el-select v-model="paramSetform.repository_Url" placeholder="请选择文档库" @change="onInput">
               <el-option v-for="item in documentUrlOption" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
 
           </el-form-item>
-          <el-form-item label="注册库" prop="registryURL" style="text-align:left">
-            <el-select v-model="paramSetform.registryURL" placeholder="请选择注册库">
+          <el-form-item label="注册库" prop="registered_Url" style="text-align:left">
+            <el-select v-model="paramSetform.registered_Url" placeholder="请选择注册库">
               <el-option v-for="item in registryUrlOption" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
@@ -19,13 +19,17 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="病人Id" prop="patientId" style="text-align:left;">
-            <el-input v-model="paramSetform.patientId">
+            <el-input v-model="paramSetform.patientId" @change="onInput">
             </el-input>
           </el-form-item>
           <el-form-item label="sourceID" prop="sourceID">
             <el-input v-model="paramSetform.sourceID">
             </el-input>
           </el-form-item>
+          <!-- <el-form-item label="测试" prop="msg">
+            <el-input v-model="paramSetform.msg" @change="onInput">
+            </el-input>
+          </el-form-item> -->
 
         </el-col>
         <el-col :span="9">
@@ -60,16 +64,16 @@ export default {
     return {
       activeNames: ["1"],
       paramSetform: {
-        documentURL: "",
-        registryURL: "",
+        repository_Url: "",
+        registered_Url: "",
         patientId: "",
         sourceID: "",
         soap: "2",
-        tls: "2"
+        tls: "2",
       },
       documentUrlOption: [
         {
-          value: "选项1",
+          value: "http://192.168.131.65:89",
           label: "蓝网http"
         },
         {
@@ -104,6 +108,11 @@ export default {
         }
       ]
     };
+  },
+  methods:{
+    onInput(){
+          this.$emit('message',this.paramSetform.repository_Url,this.paramSetform.patientId);
+    }
   }
 };
 </script>

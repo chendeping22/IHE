@@ -119,6 +119,9 @@ export default {
     reset(form) {
       //重置表单
       this.$refs[form].resetFields();
+    },
+    handleClick(){
+      
     }
   },
 

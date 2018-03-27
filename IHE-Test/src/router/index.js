@@ -13,15 +13,22 @@ export default new Router({
       component: resolve => require(['../components/error/404.vue'], resolve)
     },
     {
-      path: '*',
-      redirect: '/404'
+      path: '/',
+      redirect: '/login'
     },
     {
-      path: '/',
+      path: '/login',
+      component: resolve => require(['../components/page/Login.vue'], resolve)
+  },
+    // {
+    //   path: '*',
+    //   redirect: '/404'
+    // },
+    {
+      path: '/provideDocument',
       meta: {
         headerActive: 'provideDocument'
       },
-      redirect: '/provideDocument',
       component: resolve => require(['../components/common/Header.vue'], resolve),
       children: [
         {

@@ -43,7 +43,12 @@ body {
   padding: 10px 20px;
   text-align: left;
   border: none;
-  color: #457bc7
+  color: #457bc7;
+  font-size: 14px
+}
+.el-collapse-item__header{
+  font-size: 14px;
+  color: #457bc7;
 }
 
 .el-card__body {

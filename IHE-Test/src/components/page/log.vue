@@ -3,7 +3,7 @@
     <el-row>
       <el-col :span="4">
         <el-form-item label="Logger">
-          <el-radio-group v-model="logParams">
+          <el-radio-group v-model="logForm.logParams">
             <el-radio :label="1">NoDebug</el-radio>
             <el-radio :label="2">GeneralDebug</el-radio>
             <el-radio :label="3">DetailDebug</el-radio>
@@ -28,7 +28,9 @@
 export default {
   data() {
     return {
-      logParams: 1
+      logForm:{
+        logParams:""
+      }
     };
   }
 };

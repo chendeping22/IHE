@@ -92,7 +92,8 @@ export default {
       value1: "",
       tableData: [],
       loading: false,
-      activeName: "first",
+			activeName: "first",
+			activeNames:"",
       searchForm: {
         patientId: "",
         status: "",
