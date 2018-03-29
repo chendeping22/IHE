@@ -1,6 +1,5 @@
 
 <template>
-
   <div v-loading="loading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading">
     <v-param v-on:message="recieveMessage"></v-param>
     <el-form ref="submitForm" :model="submitForm" :rules="submitRules" label-width="100px" class="form-wrap" style="padding-top:0">
@@ -345,22 +344,8 @@ export default {
       const self = this;
       self.$refs[formName].validate(valid => {
         if (valid) {
-          // console.log(self.$refs);
-          // let url = "/xdsb/sendDocument";
-          // self.$refs.upload.submit();
-          // //深拷贝，改变params对象属性，submitForm不受影响
-          // let params = JSON.parse(JSON.stringify(this.submitForm));
-          // params.extrinsicFileName = this.fileBlob;
-          // console.log(this.submitForm.extrinsicFileName);
-          // delete params.folderId;
-          // delete params.existFolderId;
-          // this.xdsJson = params;
-          // console.log(this.xdsJson);
-          // console.log("SendDocument");
-          // self.$axios.post(url, this.xdsJson).then(res => {
-          //   console.log(res);
-          // });
           let url = "/source/sendDoc";
+          console.log(url);
           let params = JSON.parse(JSON.stringify(this.submitForm));
           console.log(params);
           self.$axios.post(url, params).then(res => {
@@ -381,7 +366,8 @@ export default {
           delete params.extrinsic_Author_Institution;
           delete params.extrinsic_Author_Role;
           delete params.extrinsic_Author_Specialty;
-          self.$axios.post(url, this.params).then(res => {
+          console.log(params);
+          self.$axios.post(url,params).then(res => {
             console.log(res);
           });
         }

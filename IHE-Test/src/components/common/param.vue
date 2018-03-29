@@ -26,11 +26,6 @@
             <el-input v-model="paramSetform.sourceID">
             </el-input>
           </el-form-item>
-          <!-- <el-form-item label="测试" prop="msg">
-            <el-input v-model="paramSetform.msg" @change="onInput">
-            </el-input>
-          </el-form-item> -->
-
         </el-col>
         <el-col :span="9">
           <el-row>
@@ -73,7 +68,7 @@ export default {
       },
       documentUrlOption: [
         {
-          value: "http://192.168.131.65:89",
+          value: "http://192.168.121.66:89",
           label: "蓝网http"
         },
         {
@@ -108,6 +103,14 @@ export default {
         }
       ]
     };
+  },
+   created(){
+    let self=this;
+    let url="/systemConfig/queryAll";
+    self.$axios.post(url).then(res =>{
+      //this.documentUrlOption=res.data;
+      console.log(this.documentUrlOption)
+    })
   },
   methods:{
     onInput(){

@@ -1,6 +1,10 @@
 <template>
   <el-form ref="logForm" :model="logForm" label-width="100px" class="form-wrap">
     <el-row>
+      <el-col :span="20">
+        <div class="logContent">
+        </div>
+      </el-col>
       <el-col :span="4">
         <el-form-item label="Logger">
           <el-radio-group v-model="logForm.logParams">
@@ -14,11 +18,6 @@
           <el-button type="primary">清空</el-button>
         </el-form-item>
       </el-col>
-      <el-col :span="20">
-        <div class="logContent">
-
-        </div>
-      </el-col>
     </el-row>
 
   </el-form>
@@ -28,8 +27,8 @@
 export default {
   data() {
     return {
-      logForm:{
-        logParams:""
+      logForm: {
+        logParams: ""
       }
     };
   }
@@ -46,6 +45,6 @@ export default {
   border: 1px dashed #ccc;
   height: 600px;
   overflow: hidden;
-  margin-left: 10px
+  margin-left: 10px;
 }
 </style>

@@ -18,24 +18,24 @@ module.exports = {
             '^/wadoImage': '/wadoImage'
           }
       },
-      // '/xdsb/sendDocument':{
-      //   target:'http://192.168.121.49:8080',
-      //   changeOrigin: true,
-      //     pathRewrite: {
-      //       '^/xdsb/sendDocument': '/xdsb/sendDocument'
-      //     }
-      // },
-      '/source/sendDoc':{
+      '/source':{
         target:'http://192.168.121.66:8080',
         changeOrigin: true,
           pathRewrite: {
-            'source/sendDoc': 'source/sendDoc'
+            '/source': '/source'
+          }
+      },
+      '/systemConfig':{
+        target:'http://192.168.121.66:8080',
+        changeOrigin: true,
+          pathRewrite: {
+            '/systemConfig': '/systemConfig'
           }
       },
     },
 
     // Various Dev Server settings
-    host: '192.168.121.49', // can be overwritten by process.env.HOST
+    host: '192.168.121.159', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,
