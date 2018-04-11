@@ -6,13 +6,13 @@
           <el-form ref="searchForm" :model="searchForm" :rules="searchRules" label-width="200px">
             <el-row :gutter="12">
               <el-col :span="12">
-                <el-form-item label="EntryUUID" prop="EntryUUID">
-                  <el-input v-model="searchForm.EntryUUID" placeholder=""></el-input>
+                <el-form-item label="EntryUUID" prop="entryUUID">
+                  <el-input v-model="searchForm.entryUUID" placeholder=""></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="UniqueId" prop="UniqueId">
-                  <el-input v-model="searchForm.UniqueId" placeholder=""></el-input>
+                <el-form-item label="UniqueId" prop="uniqueId">
+                  <el-input v-model="searchForm.uniqueId" placeholder=""></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -25,23 +25,23 @@
             </el-row>
           </el-form>
           <div class="search-btn center">
-            <el-button type="primary" @click="search">确认</el-button>
+            <el-button type="primary" @click="getDocuments('searchForm')">确认</el-button>
             <el-button type="info" plain @click="cancelForm('searchForm')">重置</el-button>
           </div>
         </div>
         <div class="info-table">
           <el-table :data="tableData" border style="width:100%; text-align: left;" height="250">
-            <el-table-column prop="date" label="文档创建时间">
+            <el-table-column prop="creationTime" label="文档创建时间" width="120">
             </el-table-column>
-            <el-table-column prop="name" label="文档类型mineType">
+            <el-table-column prop="mimeType" label="文档类型mineType" width="130">
             </el-table-column>
-            <el-table-column prop="address" label="文档状态">
+            <el-table-column prop="status" label="文档状态">
             </el-table-column>
-            <el-table-column prop="address" label="文档唯一标识">
+            <el-table-column prop="uniqueId" label="UniqueId">
             </el-table-column>
-            <el-table-column prop="address" label="文档库唯一标识">
-            </el-table-column>
-            <el-table-column prop="address" label="EntryID">
+            <!-- <el-table-column prop="address" label="文档库唯一标识">
+            </el-table-column> -->
+            <el-table-column prop="id" label="EntryID">
             </el-table-column>
           </el-table>
         </div>
@@ -51,27 +51,48 @@
 </template>
 
 <script>
+import { formatDuring, baseInfo } from "../../utils/common";
 export default {
   data() {
     return {
       tableData: [],
       loading: false,
       searchForm: {
-        EntryUUID: "",
+        repository_Url:"",
+        entryUUID: "",
         UniqueId: "",
         homeCommunityId: "",
       },
       searchRules: {
         EntryUUID: [],
-        UniqueId: [],
+        uniqueId: [],
         homeCommunityId: [],
       }
     };
   },
-  created() {},
+  created() {
+        this.searchForm.repository_Url = baseInfo.repository_Url;
+  },
   computed: {},
   methods: {
-    search() {},
+     getDocuments(formName) {
+       this.tableData=[];
+      const self = this;
+      self.$refs[formName].validate(valid => {
+        if (valid) {
+          let url = "/consumer/getDocuments";
+          console.log(url);
+          let params = JSON.parse(JSON.stringify(this.searchForm));
+          console.log(params);
+          self.$axios.post(url, params).then(res => {
+            console.log(res.data);
+                        res.data.creationTime=formatDuring(res.data.creationTime)
+            this.tableData.push(res.data)
+            //this.tableData = res.data;
+          });
+        }
+      });
+    },
     cancelForm(formName) {
       //取消编辑机构
       // this.tableData = [];

@@ -11,13 +11,13 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/wadoImage':{
-        target:'http://192.168.121.66:8080',
-        changeOrigin: true,
-          pathRewrite: {
-            '^/wadoImage': '/wadoImage'
-          }
-      },
+      // '/wadoImage':{
+      //   target:'http://192.168.121.66:8080',
+      //   changeOrigin: true,
+      //     pathRewrite: {
+      //       '^/wadoImage': '/wadoImage'
+      //     }
+      // },
       '/source':{
         target:'http://192.168.121.66:8080',
         changeOrigin: true,
@@ -32,10 +32,17 @@ module.exports = {
             '/systemConfig': '/systemConfig'
           }
       },
+      '/consumer':{
+        target:'http://192.168.121.66:8080',
+        changeOrigin: true,
+          pathRewrite: {
+            '/consumer': '/consumer'
+          }
+      },
     },
 
     // Various Dev Server settings
-    host: '192.168.121.159', // can be overwritten by process.env.HOST
+    host: '192.168.121.240', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,

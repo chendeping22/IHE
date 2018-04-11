@@ -37,7 +37,11 @@
             <el-input v-model="addForm.aetitle"></el-input>
           </el-form-item>
           <el-form-item label="contentType" prop="contentType">
-            <el-input v-model="addForm.contentType"></el-input>
+            <!-- <el-input v-model="addForm.contentType"></el-input> -->
+            <el-select v-model="addForm.contentType" placeholder="请选择">
+              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+              </el-option>
+            </el-select>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -92,16 +96,16 @@
       <!-- 修改表单 -->
       <template>
         <!-- 表格 -->
-        <el-table :data="tableData" border style="width: 100%">
+        <el-table :data="tableData" border style="width: 100%" @row-contextmenu="configDate" id="set">
           <el-table-column fixed prop="company" label="厂家" width="100">
-          </el-table-column>
-          <el-table-column prop="repositoryHttp" label="文档库-http" width="200">
-          </el-table-column>
-          <el-table-column prop="registerHttp" label="注册库-http" width="200">
           </el-table-column>
           <el-table-column prop="repositoryHttps" label="文档库-https" width="200">
           </el-table-column>
           <el-table-column prop="registerHttps" label="注册库-https" width="200">
+          </el-table-column>
+          <el-table-column prop="repositoryHttp" label="文档库-http" width="200">
+          </el-table-column>
+          <el-table-column prop="registerHttp" label="注册库-http" width="200">
           </el-table-column>
           <el-table-column prop="patientId" label="病人ID" width="120">
           </el-table-column>
@@ -125,6 +129,14 @@
         <!-- 表格end -->
       </template>
 
+      <!--自定义右键菜单html代码-->
+      <div id="menu">
+        <div class="menu" id="repositoryHttp">文档库-http(H)</div>
+        <div class="menu" id="registerHttp">注册库-http(T)</div>
+        <div class="menu" id="repositoryHttps">文档库-https(P)</div>
+        <div class="menu" id="registerHttps">注册库-https(S)</div>
+        <div class="menu" id="documentHttp">设为影响文档源(Z)</div>
+      </div>
     </div>
   </el-container>
 
@@ -133,11 +145,27 @@
 
 
 <script>
+import { serverListbus } from "../../utils/bus";
+import { baseInfo } from "../../utils/common";
 export default {
   data() {
     return {
       loading: false,
       tableData: [],
+      options: [
+        {
+          value: "application/dicom",
+          label: "application/dicom"
+        },
+        {
+          value: "image/jpeg",
+          label: "image/jpeg"
+        },
+        {
+          value: "application%2Fdicom",
+          label: "application%2Fdicom"
+        }
+      ],
       addForm: {
         id: "",
         company: "",
@@ -167,6 +195,9 @@ export default {
         contentType: ""
       },
       delForm: {
+        id: ""
+      },
+      configForm: {
         id: ""
       },
       infoRules: {
@@ -232,13 +263,28 @@ export default {
     };
   },
   created() {
-    let self = this;
-    let url = "/systemConfig/queryAll";
-    self.$axios.post(url).then(res => {
-      this.tableData = res.data;
-    });
+    //获取表单数据
+    this.getData();
+  },
+  mounted() {
+    //关闭右键菜单，很简单
+    window.onclick = function(e) {
+      //用户触发click事件就可以关闭了，因为绑定在window上，按事件冒泡处理，不会影响菜单的功能
+      //document.queryelector("#menu").style.width = 0;
+      var myMenu = document.getElementById("menu");
+      if (myMenu) {
+        myMenu.style.width = 0;
+      }
+    };
   },
   methods: {
+    getData() {
+      let self = this;
+      let url = "/systemConfig/queryAll";
+      self.$axios.post(url).then(res => {
+        this.tableData = res.data;
+      });
+    },
     saveData(formName) {
       const self = this;
       self.$refs[formName].validate(valid => {
@@ -253,9 +299,10 @@ export default {
               if (res.status === 200) {
                 this.$message.success(res.data);
                 this.addDialogFormVisible = false;
-                setTimeout(function() {
-                  document.location.reload(true);
-                }, 3000);
+                this.getData();
+                // setTimeout(function() {
+                //   document.location.reload(true);
+                // }, 3000);
               } else {
                 this.$message.error(res.data);
               }
@@ -281,9 +328,10 @@ export default {
               if (res.status === 200) {
                 this.$message.success(res.data);
                 this.changeDialogFormVisible = false;
-                setTimeout(function() {
-                  document.location.reload(true);
-                }, 3000);
+                this.getData();
+                // setTimeout(function() {
+                //   document.location.reload(true);
+                // }, 3000);
               } else {
                 this.$message.error(res.data);
               }
@@ -334,9 +382,10 @@ export default {
             .then(() => {
               if (res.data === "删除成功") {
                 this.$message.success(res.data);
-                setTimeout(function() {
-                  document.location.reload(true);
-                }, 3000);
+                this.getData();
+                // setTimeout(function() {
+                //   document.location.reload(true);
+                // }, 3000);
               } else {
                 this.$message.error(res.data);
               }
@@ -362,12 +411,112 @@ export default {
     },
     AddServer() {
       this.addDialogFormVisible = true;
+    },
+    configDate(row, e) {
+      //取消默认的浏览器自带右键 很重要！！
+      e.preventDefault();
+      //获取我们自定义的右键菜单
+      var menu = document.querySelector("#menu");
+      //根据事件对象中鼠标点击的位置，进行定位
+      menu.style.left = e.clientX + "px";
+      menu.style.top = e.clientY + "px";
+      //改变自定义菜单的宽，让它显示出来
+      menu.style.width = "140px";
+      // const self = this;
+      // self.configForm.id = row.id;
+      // console.log(row.id);
+      this.fn_repositoryHttp(row);
+      this.fn_registerHttp(row);
+      this.fn_repositoryHttps(row);
+      this.fn_registerHttps(row);
+
+      // this.meunOne(row);
+    },
+    fn_repositoryHttp(row) {
+      var repositoryHttp = document.querySelector("#repositoryHttp");
+      repositoryHttp.onclick = function() {
+        serverListbus.$emit("repositoryHttpChild", row.repositoryHttp);
+        baseInfo.repository_Url = row.repositoryHttp;
+      };
+    },
+    fn_registerHttp(row) {
+      var registerHttp = document.querySelector("#registerHttp");
+      registerHttp.onclick = function() {
+        serverListbus.$emit("registerHttpChild", [
+          row.registerHttp,
+          row.patientId,
+          row.sourceId
+        ]);
+        baseInfo.patientId = row.patientId;
+        baseInfo.sourceId = row.sourceId;
+      };
+    },
+    fn_repositoryHttps(row) {
+      var repositoryHttps = document.querySelector("#repositoryHttps");
+      repositoryHttps.onclick = function() {
+        serverListbus.$emit("repositoryHttpsChild", row.repositoryHttps);
+        baseInfo.repository_Url = row.repositoryHttps;
+      };
+    },
+    fn_registerHttps(row) {
+      var registerHttps = document.querySelector("#registerHttps");
+      registerHttps.onclick = function() {
+        serverListbus.$emit("registerHttpsChild", [
+          row.registerHttps,
+          row.patientId,
+          row.sourceId
+        ]);
+        baseInfo.patientId = row.patientId;
+        baseInfo.sourceId = row.sourceId;
+      };
+    },
+    customMenu(row) {
+      //js自定义菜单功能
+      var sss = document.getElementById("set");
+      sss.oncontextmenu = function(e) {
+        //取消默认的浏览器自带右键 很重要！！
+        e.preventDefault();
+
+        //获取我们自定义的右键菜单
+        var menu = document.querySelector("#menu");
+
+        //根据事件对象中鼠标点击的位置，进行定位
+        menu.style.left = e.clientX + "px";
+        menu.style.top = e.clientY + "px";
+
+        //改变自定义菜单的宽，让它显示出来
+        menu.style.width = "140px";
+      };
     }
   }
 };
 </script>
-<style scoped>
 
+
+<style>
+/*css代码*/
+#menu {
+  width: 0; /*设置为0 隐藏自定义菜单 */
+  height: 125px;
+  overflow: hidden; /*隐藏溢出的元素*/
+  box-shadow: 0 1px 1px #888, 1px 0 1px #ccc;
+  position: absolute; /*自定义菜单相对与body元素进行定位*/
+  text-align: left;
+  color: #3c3a3a;
+  font-size: 14px;
+  background: #fff;
+  z-index: 1000;
+}
+.menu {
+  width: 140px;
+  height: 25px;
+  line-height: 25px;
+  padding: 0 10px;
+  cursor: pointer;
+}
+.menu:hover {
+  color: #040404;
+}
 </style>
 
 

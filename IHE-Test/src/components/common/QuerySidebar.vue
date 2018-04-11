@@ -37,22 +37,22 @@ export default {
             {
               index: "findDocument",
               title: "findDocument",
-              navIcon:"el-icon-document"
+              navIcon: "el-icon-document"
             },
             {
               index: "findFolder",
               title: "findFolder",
-              navIcon:"el-icon-date"
+              navIcon: "el-icon-date"
             },
             {
               index: "findSubmissionSet",
               title: "findSubmissionSet",
-              navIcon:"el-icon-news"
+              navIcon: "el-icon-news"
             },
             {
               index: "getAssociations",
               title: "getAssociations",
-              navIcon:"el-icon-printer"
+              navIcon: "el-icon-printer"
             }
           ]
         },
@@ -71,37 +71,35 @@ export default {
               title: "getDocuments"
             },
             {
-              index: "getFolder",
-              title: "getFolders"
+              index: "getFolderAndContents",
+              title: "getFolderAndContents"
             },
             {
-              index: "getSubmissionSet",
-              title: "getSubmissionSet"
+              index: "getRelatedDocument",
+              title: "getRelatedDocument"
             }
             // {
-            //   index:'getAssociations',
-            //   title:'getAssociations'
+            //   index: "getSubmissionSetAndContents",
+            //   title: "getSubmissionSetAndContents"
             // },
             // {
-            //   index:'getDocumentsAndAssociations',
-            //   title:'getDocumentsAndAssociations'
+            //   index: "getFolder",
+            //   title: "getFolders"
             // },
             // {
-            //   index:'getSubmissionSetAndContents',
-            //   title:'getSubmissionSetAndContents'
+            //   index: "getSubmissionSet",
+            //   title: "getSubmissionSet"
             // },
             // {
-            //   index:'getFolderAndContents',
-            //   title:'getFolderAndContents'
+            //   index: "getDocumentsAndAssociations",
+            //   title: "getDocumentsAndAssociations"
             // },
-            //  {
-            //   index:'getFoldersForDocument',
-            //   title:'getFoldersForDocument'
+
+            // {
+            //   index: "getFoldersForDocument",
+            //   title: "getFoldersForDocument"
             // },
-            //  {
-            //   index:'getRelatedDocuments',
-            //   title:'getRelatedDocuments'
-            // },
+            
           ]
         }
       ]

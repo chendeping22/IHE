@@ -1,73 +1,143 @@
 <template>
-  <!-- <div class="lw-container">
-    <div class="lw-table"> -->
-      <div v-loading="loading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading">
-        <div class="search-content">
-          <el-form ref="searchForm" :model="searchForm" :rules="searchRules" label-width="200px">
-            <el-row :gutter="12">
-              <el-col :span="12">
-                <el-form-item label="FolderEntryUUID" prop="FolderEntryUUID">
-                  <el-input v-model="searchForm.FolderEntryUUID" placeholder=""></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item label="FolderUniqueId" prop="FolderUniqueId">
-                  <el-input v-model="searchForm.FolderUniqueId" placeholder=""></el-input>
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <el-row :gutter="12">
-              <el-col :span="12">
-                <el-form-item label="DocumentEntryFormatCode" prop="DocumentEntryFormatCode">
-                  <el-input v-model="searchForm.DocumentEntryFormatCode" placeholder=""></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item label="DocEntryConfidentialityCode" prop="DocEntryConfidentialityCode">
-                  <el-input v-model="searchForm.DocEntryConfidentialityCode" placeholder=""></el-input>
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <el-row :gutter="12">
-              <el-col :span="12">
-                <el-form-item label="homeCommunityId" prop="homeCommunityId">
-                  <el-input v-model="searchForm.homeCommunityId" placeholder=""></el-input>
-                </el-form-item>
-              </el-col>
-            </el-row>
-          </el-form>
-          <div class="search-btn center">
-            <el-button type="primary" @click="search">确认</el-button>
-            <el-button type="info" plain @click="cancelForm('searchForm')">重置</el-button>
-          </div>
-        </div>
-      <!-- </div>
-    </div> -->
+  <div v-loading="loading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading">
+    <div class="search-content">
+      <el-form ref="searchForm" :model="searchForm" :rules="searchRules" label-width="200px">
+        <el-row :gutter="12">
+          <el-col :span="12">
+            <el-form-item label="FolderEntryUUID" prop="folderEntryUUID">
+              <el-input v-model="searchForm.folderEntryUUID" placeholder=""></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="FolderUniqueId" prop="folderUniqueId">
+              <el-input v-model="searchForm.folderUniqueId" placeholder=""></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="12">
+          <el-col :span="12">
+            <el-form-item label="DocumentEntryFormatCode" prop="DocumentEntryFormatCode">
+              <el-input v-model="searchForm.DocumentEntryFormatCode" placeholder=""></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="DocEntryConfidentialityCode" prop="DocumentEntryConfidentialityCode">
+              <el-input v-model="searchForm.DocumentEntryConfidentialityCode" placeholder=""></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="12">
+          <el-col :span="12">
+            <el-form-item label="homeCommunityId" prop="homeCommunityId">
+              <el-input v-model="searchForm.homeCommunityId" placeholder=""></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="returnType" label-width="150px">
+              <el-radio-group v-model="searchForm.returnType">
+                <el-radio label="ObjectRef "></el-radio>
+                <el-radio label="LeafClass"></el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <div class="search-btn center">
+        <el-button type="primary" @click="getFolderAndContents('searchForm')">确认</el-button>
+        <el-button type="info" plain @click="cancelForm('searchForm')">重置</el-button>
+      </div>
+    </div>
+    <div class="info-table">
+      <el-tabs v-model="activeName" type="border-card" @tab-click="handleClick">
+        <el-tab-pane label="文档" name="first">
+          <el-table :data="extrinsicObjectList" border style="width:100%; text-align: left;" height="250">
+            <el-table-column prop="creationTime" label="文档创建时间" width="120">
+            </el-table-column>
+            <el-table-column prop="mimeType" label="文档类型mineType" width="130">
+            </el-table-column>
+            <el-table-column prop="status" label="文档状态" width="100">
+            </el-table-column>
+            <el-table-column prop="uniqueId" label="文档唯一标识">
+            </el-table-column>
+            <el-table-column prop="repositoryUniqueId" label="文档库唯一标识">
+            </el-table-column>
+            <el-table-column prop="id" label="EntryID">
+            </el-table-column>
+          </el-table>
+        </el-tab-pane>
+        <el-tab-pane label="文件夹" name="second">
+          <el-table :data="folderList" border style="width:100%; text-align: left;" height="250">
+            <el-table-column prop="lastUpdateTime" label="文件夹需改时间" width="120">
+            </el-table-column>
+            <el-table-column prop="status" label="文件夹状态">
+            </el-table-column>
+            <el-table-column prop="uniqueId" label="文件夹唯一标识">
+            </el-table-column>
+            <el-table-column prop="id" label="EntryID">
+            </el-table-column>
+          </el-table>
+        </el-tab-pane>
+      </el-tabs>
+    </div>
   </div>
 </template>
 <script>
+import { formatDuring, baseInfo } from "../../utils/common";
 export default {
   data() {
     return {
+      extrinsicObjectList: [],
+      folderList: [],
       loading: false,
+      activeName: "first",
       searchForm: {
-        FolderEntryUUID: "",
-        FolderUniqueId:"",
-        DocumentEntryFormatCode:"",
-        DocEntryConfidentialityCode:"",
-        homeCommunityId: ""
+        repository_Url: "",
+        folderEntryUUID: "urn:uuid:e4515d65-fb3d-4aed-9c26-19231bf41007",
+        folderUniqueId: "",
+        DocumentEntryFormatCode: "",
+        DocumentEntryConfidentialityCode: "",
+        homeCommunityId: "",
+        returnType: "LeafClass"
       },
       searchRules: {
         FolderEntryUUID: [],
-        FolderUniqueId:[],
-        DocumentEntryFormatCode:[],
-        DocEntryConfidentialityCode:[],
-        homeCommunityId:[]
+        FolderUniqueId: [],
+        DocumentEntryFormatCode: [],
+        DocEntryConfidentialityCode: [],
+        homeCommunityId: []
       }
     };
   },
+   created() {
+        this.searchForm.repository_Url = baseInfo.repository_Url;
+  },
   methods: {
-    search() {},
+    getFolderAndContents(formName) {
+      this.extrinsicObjectList = [];
+      this.folderList = [];
+      const self = this;
+      self.$refs[formName].validate(valid => {
+        if (valid) {
+          let url = "/consumer/getFolderAndContents";
+          console.log(url);
+          let params = JSON.parse(JSON.stringify(this.searchForm));
+          console.log(params);
+          self.$axios.post(url, params).then(res => {
+            console.log(res.data);
+            //this.tableData.push(res.data)
+            //this.tableData.push(res.data);
+            res.data.extrinsicObjectList.creationTime = formatDuring(
+              res.data.creationTime
+            );
+            res.data.folderList.creationTime = formatDuring(
+              res.data.creationTime
+            );
+            this.extrinsicObjectList = res.data.extrinsicObjectList;
+            this.folderList = res.data.folderList;
+          });
+        }
+      });
+    },
     cancelForm(formName) {
       //取消编辑机构
       // this.tableData = [];
@@ -76,7 +146,8 @@ export default {
     reset(form) {
       //重置表单
       this.$refs[form].resetFields();
-    }
+    },
+    handleClick() {}
   }
 };
 </script>

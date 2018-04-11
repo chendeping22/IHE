@@ -143,12 +143,12 @@ export default new Router({
               component: resolve => require(['../components/page/getFoldersForDocument.vue'], resolve),
             },
             {
-              path: '/getRelatedDocuments',
+              path: '/getRelatedDocument',
               meta: {
                 headerActive: 'query',
-                sidebarActive: 'getRelatedDocuments',
+                sidebarActive: 'getRelatedDocument',
               },
-              component: resolve => require(['../components/page/getRelatedDocuments.vue'], resolve),
+              component: resolve => require(['../components/page/getRelatedDocument.vue'], resolve),
             },
           ]
         },
@@ -200,13 +200,13 @@ export default new Router({
           },
           component: resolve => require(['../components/page/log.vue'], resolve),
         },
-        {
-          path: '/imageFile',
-          meta: {
-            headerActive: 'imageFile'
-          },
-          component: resolve => require(['../components/page/imageFile.vue'], resolve),
-        },
+        // {
+        //   path: '/imageFile',
+        //   meta: {
+        //     headerActive: 'imageFile'
+        //   },
+        //   component: resolve => require(['../components/page/imageFile.vue'], resolve),
+        // },
         {
           path: '/wado',
           meta: {
