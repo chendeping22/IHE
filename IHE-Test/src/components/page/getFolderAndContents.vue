@@ -91,6 +91,7 @@ export default {
       loading: false,
       activeName: "first",
       searchForm: {
+        register_Url: "",
         repository_Url: "",
         folderEntryUUID: "urn:uuid:e4515d65-fb3d-4aed-9c26-19231bf41007",
         folderUniqueId: "",
@@ -110,12 +111,15 @@ export default {
   },
    created() {
         this.searchForm.repository_Url = baseInfo.repository_Url;
+        this.searchForm.register_Url=baseInfo.register_Url;
   },
   methods: {
     getFolderAndContents(formName) {
       this.extrinsicObjectList = [];
       this.folderList = [];
       const self = this;
+      this.searchForm.repository_Url = baseInfo.repository_Url;
+      this.searchForm.register_Url=baseInfo.register_Url;
       self.$refs[formName].validate(valid => {
         if (valid) {
           let url = "/consumer/getFolderAndContents";
@@ -124,14 +128,17 @@ export default {
           console.log(params);
           self.$axios.post(url, params).then(res => {
             console.log(res.data);
-            //this.tableData.push(res.data)
-            //this.tableData.push(res.data);
-            res.data.extrinsicObjectList.creationTime = formatDuring(
-              res.data.creationTime
+            //将返回的毫秒数转化为类似20071215132426格式
+            for(let i=0;i<res.data.extrinsicObjectList.length;i++){
+              res.data.extrinsicObjectList[i].creationTime = formatDuring(
+              res.data.extrinsicObjectList[i].creationTime
             );
-            res.data.folderList.creationTime = formatDuring(
-              res.data.creationTime
+            }
+            for(let i=0;i<res.data.folderList.length;i++){
+              res.data.folderList[i].lastUpdateTime = formatDuring(
+              res.data.folderList[i].lastUpdateTime
             );
+            }
             this.extrinsicObjectList = res.data.extrinsicObjectList;
             this.folderList = res.data.folderList;
           });

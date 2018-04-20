@@ -145,7 +145,7 @@
 
 
 <script>
-import { serverListbus } from "../../utils/bus";
+import { serverListBus } from "../../utils/bus";
 import { baseInfo } from "../../utils/common";
 export default {
   data() {
@@ -300,9 +300,6 @@ export default {
                 this.$message.success(res.data);
                 this.addDialogFormVisible = false;
                 this.getData();
-                // setTimeout(function() {
-                //   document.location.reload(true);
-                // }, 3000);
               } else {
                 this.$message.error(res.data);
               }
@@ -329,9 +326,6 @@ export default {
                 this.$message.success(res.data);
                 this.changeDialogFormVisible = false;
                 this.getData();
-                // setTimeout(function() {
-                //   document.location.reload(true);
-                // }, 3000);
               } else {
                 this.$message.error(res.data);
               }
@@ -435,18 +429,19 @@ export default {
     fn_repositoryHttp(row) {
       var repositoryHttp = document.querySelector("#repositoryHttp");
       repositoryHttp.onclick = function() {
-        serverListbus.$emit("repositoryHttpChild", row.repositoryHttp);
+        serverListBus.$emit("repositoryHttpChild", row.repositoryHttp);
         baseInfo.repository_Url = row.repositoryHttp;
       };
     },
     fn_registerHttp(row) {
       var registerHttp = document.querySelector("#registerHttp");
       registerHttp.onclick = function() {
-        serverListbus.$emit("registerHttpChild", [
+        serverListBus.$emit("registerHttpChild", [
           row.registerHttp,
           row.patientId,
           row.sourceId
         ]);
+        baseInfo.register_Url=row.registerHttp;
         baseInfo.patientId = row.patientId;
         baseInfo.sourceId = row.sourceId;
       };
@@ -454,18 +449,19 @@ export default {
     fn_repositoryHttps(row) {
       var repositoryHttps = document.querySelector("#repositoryHttps");
       repositoryHttps.onclick = function() {
-        serverListbus.$emit("repositoryHttpsChild", row.repositoryHttps);
+        serverListBus.$emit("repositoryHttpsChild", row.repositoryHttps);
         baseInfo.repository_Url = row.repositoryHttps;
       };
     },
     fn_registerHttps(row) {
       var registerHttps = document.querySelector("#registerHttps");
       registerHttps.onclick = function() {
-        serverListbus.$emit("registerHttpsChild", [
+        serverListBus.$emit("registerHttpsChild", [
           row.registerHttps,
           row.patientId,
           row.sourceId
         ]);
+        baseInfo.register_Url=row.registerHttps;
         baseInfo.patientId = row.patientId;
         baseInfo.sourceId = row.sourceId;
       };

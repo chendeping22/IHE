@@ -1,7 +1,7 @@
 <template>
   <el-form ref="logForm" :model="logForm" label-width="100px" class="form-wrap">
     <el-row>
-      <el-col :p="20">
+      <el-col :span="20">
         <div id="logContent">
           <p style="color:red">{{data}}</p>
           <p style="color:blue">{{configHeaders}}</p>
@@ -12,7 +12,7 @@
           <p style="color:red">{{statusText}}</p>
         </div>
       </el-col>
-      <el-col :p="4">
+      <el-col :span="4">
         <el-form-item label="Logger">
           <el-radio-group v-model="logForm.logParams">
             <el-radio :label="1">NoDebug</el-radio>

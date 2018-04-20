@@ -8,7 +8,7 @@
             <span>病人信息</span>
           </div>
           <el-col :span="12">
-            <el-form-item label="病人Id" prop="patientId">
+            <el-form-item label="patientId" prop="patientId">
               <el-input v-model="submitForm.patientId">
               </el-input>
             </el-form-item>
@@ -23,8 +23,6 @@
               </el-col>
               <el-col :span="12">
                 <el-form-item label="性别" prop="patientSex">
-                  <!-- <el-input v-model="submitForm.patientSex">
-                  </el-input> -->
                   <el-select v-model="submitForm.patientSex" placeholder="请选择">
                     <el-option label="男" value="M">
                     </el-option>
@@ -43,12 +41,12 @@
           </el-col>
           <el-col :span="12">
             <el-row>
-              <el-col :span="12">
+              <!-- <el-col :span="12">
                 <el-form-item label="测试" prop="repository_Url">
                   <el-input v-model="submitForm.repository_Url">
                   </el-input>
                 </el-form-item>
-              </el-col>
+              </el-col> -->
               <el-col :span="12">
                 <el-form-item label="生日" prop="birthday">
                   <el-date-picker v-model="submitForm.birthday" type="date" placeholder="选择日期" format="yyyy 年 MM 月 dd 日" value-format="yyyyMMdd">
@@ -56,10 +54,8 @@
                 </el-form-item>
               </el-col>
             </el-row>
-
           </el-col>
         </el-card>
-
       </el-row>
       <el-row>
         <el-card class="box-card" style="border-right: none;">
@@ -117,16 +113,14 @@
       </el-row>
       <el-row>
         <el-col :span="12">
-
           <el-card class="box-card" body-style="padding-right: 0;">
             <div slot="header" class="clearfix">
               <span>文档</span>
             </div>
-
             <el-row>
               <el-col :span="20">
                 <el-tabs type="border-card">
-                  <el-tab-pane label="文件名">
+                  <el-tab-pane label="文件名" style="padding: 12px;">
                     <!-- <el-upload class="upload-demo" ref="upload" drag name="xdsbFile" action="urlName.document.sendDocument" :auto-upload="false" :show-file-list="true" :data="xdsJson" :on-error="onError" :before-remove="beforeRemove" :before-upload="beforeUpload" multiple>
                   <div class="el-upload__text">将文件拖到此处，或
                     <em>点击上传</em>
@@ -144,7 +138,6 @@
               <el-col :span="4">
                 <el-button type="primary" style="width:80px;margin-top:30px" @click="SendDocument('submitForm')">CreateKO</el-button>
                 <el-button type="primary" style="width:80px;margin-left:0;margin-top:30px" @click="SendDocument('submitForm')">OpenKO</el-button>
-
               </el-col>
             </el-row>
             <el-row>
@@ -157,13 +150,11 @@
               </el-col>
               <el-col :span="6">
                 <el-button type="primary" icon="el-icon-document" style="width:140px;margin-top:8px;float:right;" @click="SendDocument('submitForm')">SendDocument</el-button>
-
               </el-col>
               <el-col :span="7">
                 <el-button type="primary" icon="el-icon-document" style="width:140px;margin-top:8px;float:right;" @click="SendDocument('submitForm')">SendDocument-I</el-button>
               </el-col>
             </el-row>
-
           </el-card>
         </el-col>
         <el-col :span="12">
@@ -196,42 +187,37 @@
         </el-col>
       </el-row>
     </el-form>
-
   </div>
 </template>
 <script>
-//import vParam from "../common/param";
-import { config, urlName } from "../../utils/config";
-import { showLog } from "../../utils/common";
+import { showLog, baseInfo, pathReset } from "../../utils/common";
 export default {
-  props: ["message"],
   data() {
     return {
       loading: false,
       fileList: [],
       submitForm: {
-        repository_Url: "",
+        repository_Url: "", //文档库作者（所有接口必填）
         fileName:
-          "E:/xds_doc_from/111.txt,E:/xds_doc_from/222.txt,E:/xds_doc_from/333.txt",
-        patientId: "",
-        patientName: "",
-        patientSex: "",
-        birthday: "",
-        address: "",
-        submissionSet_Author_Person: "",
-        submissionSet_Author_Institution: "",
-        submissionSet_Author_Role: "",
-        submissionSet_Author_Specialty: "",
-        extrinsic_Author_Person: "",
-        extrinsic_Author_Institution: "",
-        extrinsic_Author_Role: "",
-        extrinsic_Author_Specialty: "",
+          "E:/xds_doc_from/111.txt,E:/xds_doc_from/222.txt,E:/xds_doc_from/333.txt", //文件路径（提交文档、往文件夹提交文档以及文档的追加替换转换接口必填）
+        patientId: "", //病人ID（所有必填）
+        patientName: "", //姓名
+        patientSex: "", //性别
+        birthday: "", //出生日期
+        address: "", //地址
+        submissionSet_Author_Person: "", //提交集作者姓名
+        submissionSet_Author_Institution: "", //提交集作者机构
+        submissionSet_Author_Role: "", //提交集作者职业
+        submissionSet_Author_Specialty: "", //提交集作者专长
+        extrinsic_Author_Person: "", //文档作者姓名
+        extrinsic_Author_Institution: "", //文档作者机构
+        extrinsic_Author_Role: "", //文档作者职业
+        extrinsic_Author_Specialty: "", //文档作者专长
         existed_Uuid: "", //已存在文件夹ID
-        associate: "",
-        existedDocId: "", //已存在文档ID
+        associate: "", //文档操作（文件的追加替换转换必填）
+        existedDocId: "", //已存在文档ID（文件的追加替换转换必填）
         folderId: ""
       },
-      xdsJson: {},
       fileBlob: "",
       submitRules: {}
       // submitRules: {
@@ -301,86 +287,96 @@ export default {
       // },
     };
   },
+  created() {
+    //将baseInfo的值传入表单
+    this.submitForm.repository_Url = baseInfo.repository_Url;
+    this.submitForm.patientId = baseInfo.patientId;
+  },
   methods: {
-    formatDate(param) {},
-    onError(err, file, fileList) {
-      return this.$confirm(`文件上传失败`);
-    },
-    beforeUpload(file) {
-      console.log(file);
-      //分离出文件的blob对象（文件的二进制流数据）
-      if (window.createObjcectURL != undefined) {
-        this.fileBlob = window.createOjcectURL(file);
-      } else if (window.URL != undefined) {
-        this.fileBlob = window.URL.createObjectURL(file);
-      } else if (window.webkitURL != undefined) {
-        this.fileBlob = window.webkitURL.createObjectURL(file);
-      }
-      console.log("fileBlob");
-      console.log(this.fileBlob);
-    },
-    beforeRemove(file, fileList) {
-      return this.$confirm(`确定移除 ${file.name}？`);
-    },
+    // //上传文件出错时的钩子
+    // onError(err, file, fileList) {
+    //   return this.$confirm(`文件上传失败`);
+    // },
+    // //上传文件之前的钩子
+    // beforeUpload(file) {
+    //   console.log(file);
+    //   //分离出文件的blob对象（文件的二进制流数据）
+    //   if (window.createObjcectURL != undefined) {
+    //     this.fileBlob = window.createOjcectURL(file);
+    //   } else if (window.URL != undefined) {
+    //     this.fileBlob = window.URL.createObjectURL(file);
+    //   } else if (window.webkitURL != undefined) {
+    //     this.fileBlob = window.webkitURL.createObjectURL(file);
+    //   }
+    //   console.log("fileBlob");
+    //   console.log(this.fileBlob);
+    // },
+    // //移除文件之前的钩子
+    // beforeRemove(file, fileList) {
+    //   return this.$confirm(`确定移除 ${file.name}？`);
+    // },
     SendDocument(formName) {
+      //提交文档
       const self = this;
-      console.log(this.message);
-      this.submitForm.repository_Url = this.message[0];
-      this.submitForm.patientId = this.message[1];
+      this.submitForm.fileName = pathReset(this.submitForm.fileName); //将正斜杠/替换成反斜杠\
+      this.submitForm.repository_Url = baseInfo.repository_Url; //手写配置参数更新表单数据
+      this.submitForm.patientId = baseInfo.patientId;
       self.$refs[formName].validate(valid => {
         if (valid) {
           if (this.submitForm.associate === "") {
+            //到文档操作值为空时，调用提交文档接口
             let url = "/source/sendDoc";
-            //let url = "http://192.168.121.66:8787/upload"
-            console.log(url);
+            //console.log(this.submitForm.repository_Url)
             let params = JSON.parse(JSON.stringify(this.submitForm));
+            //移除整个表单内本接口不需要提交的字段
             delete params.existed_Uuid;
             delete params.associate;
             delete params.existedDocId;
             console.log(params);
-            console.log("发送文件");
             self.$axios.post(url, params).then(res => {
               console.log(res);
-              this.setLog(res);
-               if(res.data==="success"){
+              this.setLog(res); //把返回的数据存储在showLog对象中
+              if (res.data === "success") {
                 console.log(res.status);
                 this.$message({
-                message: res.data,
-                type: "success"
-              });
-              }else{
-                this.$message.error('上传失败！');
+                  message: res.data,
+                  type: "success"
+                });
+              } else {
+                this.$message.error("提交失败！");
               }
-              //showLog.data=res.data
-              //ShowLogBus.$emit("showLog", res);
             });
           } else {
+            //当文档操作值不为空时，调用文档操作的接口
             let url = "/source/sendDoc";
-            console.log(url);
+            //console.log(url);
             let params = JSON.parse(JSON.stringify(this.submitForm));
             delete params.existed_Uuid;
             console.log(params);
-            console.log("文件操作");
+            //console.log("文件操作");
             self.$axios.post(url, params).then(res => {
               console.log(res);
-             
+               this.setLog(res); //把返回的数据存储在showLog对象中
+              if (res.data === "success") {
+                console.log(res.status);
+                this.$message({
+                  message: res.data,
+                  type: "success"
+                });
+              } else {
+                this.$message.error("提交失败！");
+              }
             });
           }
         }
       });
     },
-    setLog(res) {
-      showLog.config.data = res.config.data;
-      showLog.config.headers = res.config.headers;
-      showLog.config.method = res.config.method;
-      showLog.data.date = res.data.date;
-      showLog.headers = res.headers;
-      showLog.request.responseURL = res.request.responseURL;
-      showLog.status = res.status;
-      showLog.statusText = res.statusText;
-    },
+
     SendFolder(formName) {
+      //提交文件夹
       const self = this;
+      this.submitForm.repository_Url = baseInfo.repository_Url;
+      this.submitForm.patientId = baseInfo.patientId;
       self.$refs[formName].validate(valid => {
         if (valid) {
           let url = "/source/sendFolder";
@@ -397,15 +393,25 @@ export default {
           console.log(params);
           self.$axios.post(url, params).then(res => {
             console.log(res);
+             this.setLog(res); //把返回的数据存储在showLog对象中
+              if (res.data === "success") {
+                console.log(res.status);
+                this.$message({
+                  message: res.data,
+                  type: "success"
+                });
+              } else {
+                this.$message.error("提交失败！");
+              }
           });
         }
       });
     },
     SendFolderDocument(formName) {
+      //往文件夹里提交文档
       const self = this;
-      console.log(this.message);
-      this.submitForm.repository_Url = this.message[0];
-      this.submitForm.patientId = this.message[1];
+      this.submitForm.repository_Url = baseInfo.repository_Url;
+      this.submitForm.patientId = baseInfo.patientId;
       self.$refs[formName].validate(valid => {
         if (valid) {
           let url = "/source/sendDocToFolder";
@@ -416,14 +422,32 @@ export default {
           console.log(params);
           self.$axios.post(url, params).then(res => {
             console.log(res);
+             this.setLog(res); //把返回的数据存储在showLog对象中
+              if (res.data === "success") {
+                console.log(res.status);
+                this.$message({
+                  message: res.data,
+                  type: "success"
+                });
+              } else {
+                this.$message.error("提交失败！");
+              }
           });
         }
       });
+    },
+    setLog(res) {
+      //把返回的数据存储在showLog对象中
+      showLog.config.data = res.config.data;
+      showLog.config.headers = res.config.headers;
+      showLog.config.method = res.config.method;
+      showLog.data.date = res.data.date;
+      showLog.headers = res.headers;
+      showLog.request.responseURL = res.request.responseURL;
+      showLog.status = res.status;
+      showLog.statusText = res.statusText;
     }
   }
-  // components: {
-  //   vParam
-  // }
 };
 </script>
 

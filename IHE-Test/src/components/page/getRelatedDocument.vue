@@ -68,6 +68,7 @@ export default {
       loading: false,
       activeName:'first',
       searchForm: {
+        register_Url: "",
         repository_Url: "",
         creationTime:"",
         documentEntryEntryUUID: "urn:uuid:ac422915-62d3-414e-97e9-2dbe721b74d6",
@@ -86,11 +87,14 @@ export default {
   },
    created() {
         this.searchForm.repository_Url = baseInfo.repository_Url;
+        this.searchForm.register_Url=baseInfo.register_Url;
   },
   methods: {
      getRelatedDocument(formName) {
        this.tableData=[];
       const self = this;
+      this.searchForm.repository_Url = baseInfo.repository_Url;
+        this.searchForm.register_Url=baseInfo.register_Url;
       self.$refs[formName].validate(valid => {
         if (valid) {
           let url = "/consumer/getRelatedDocument";
@@ -99,7 +103,7 @@ export default {
           console.log(params);
           self.$axios.post(url, params).then(res => {
             console.log(res.data);
-            //this.tableData.push(res.data)
+            //将返回的毫秒数转化为类似20071215132426格式
             res.data.creationTime=formatDuring(res.data.creationTime)
                this.tableData.push(res.data);
           });

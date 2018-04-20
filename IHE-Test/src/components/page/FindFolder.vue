@@ -23,7 +23,7 @@
 						</div>
 					</el-col>
 				</el-row>
-				<el-collapse v-model="activeNames">
+				<el-collapse v-model="activeCollapse">
 					<el-collapse-item title="" name="1">
 						<el-row :gutter="12">
 							<el-col :span="12">
@@ -72,37 +72,38 @@
 				</el-collapse>
 			</el-form>
 		</div>
+		<!-- 表格 -->
 		<div class="info-table">
-			<el-tabs v-model="activeName" type="border-card" @tab-click="handleClick">
+			<el-tabs v-model="activeTabs" type="border-card" @tab-click="handleClick">
 				<el-tab-pane label="文件夹" name="first">
 					<el-table :data="tableData" border style="width:100%; text-align: left;" height="250">
-						<el-table-column prop="lastUpdateTime" label="文件夹需改时间">
+						<el-table-column prop="lastUpdateTime" label="LastUpdateTime">
 						</el-table-column>
-						<el-table-column prop="status" label="文件夹状态">
+						<el-table-column prop="status" label="Status">
 						</el-table-column>
-						<el-table-column prop="id" label="文件夹唯一标识">
+						<el-table-column prop="id" label="Id">
 						</el-table-column>
-						<el-table-column prop="uniqueId" label="EntryID">
+						<el-table-column prop="uniqueId" label="UniqueId">
 						</el-table-column>
 					</el-table>
 				</el-tab-pane>
 			</el-tabs>
 		</div>
+			<!-- 表格end -->
 	</div>
 </template>
 
 <script>
-import { FindFolder } from "../../utils/bus";
-import { baseInfo } from "../../utils/common";
+import { formatDuring,baseInfo } from "../../utils/common";
 export default {
   data() {
     return {
-      value1: "",
       tableData: [],
       loading: false,
-      activeName: "first",
-      activeNames: "",
+      activeTabs: "first",
+      activeCollapse: 1,
       searchForm: {
+				register_Url:"",
         repository_Url: "",
         patientId: "",
         status: "",
@@ -111,29 +112,22 @@ export default {
         codeList: "",
         returnType: ""
       },
-      searchRules: {
-        patientId: [],
-        status: [],
-        lastUpdateTimeFrom: [],
-        lastUpdateTimeTo: [],
-        codeList: []
+       searchRules: {
       }
     };
   },
   created() {
-    // FindFolder.$on("queryFolder", data => {
-    //   console.log(data);
-    //   this.searchForm.patientId = data[1];
-    //   this.searchForm.repository_Url = data[0];
-    //   console.log("文件夹");
-    // });
     this.searchForm.patientId = baseInfo.patientId;
-    this.searchForm.repository_Url = baseInfo.repository_Url;
+		this.searchForm.repository_Url = baseInfo.repository_Url;
+		this.searchForm.register_Url = baseInfo.register_Url;
   },
   computed: {},
   methods: {
-    FindFolder(formName) {
-      const self = this;
+    FindFolder(formName) {//查询文件夹
+			const self = this;
+			this.searchForm.repository_Url = baseInfo.repository_Url;
+			this.searchForm.patientId = baseInfo.patientId;
+			this.searchForm.register_Url = baseInfo.register_Url;
       self.$refs[formName].validate(valid => {
         if (valid) {
           let url = "/consumer/queryFolder";
@@ -142,6 +136,12 @@ export default {
           console.log(params);
           self.$axios.post(url, params).then(res => {
 						console.log(res);
+						//将返回的毫秒数转化为类似20071215132426格式
+						for(let i=0;i<res.data.length;i++){
+              res.data[i].lastUpdateTime = formatDuring(
+              res.data[i].lastUpdateTime
+            );
+            }
 						this.tableData = res.data;
           });
         }

@@ -41,7 +41,7 @@
       </el-form>
       <div class="info-table">
         <el-tabs v-model="activeName" type="border-card" @tab-click="handleClick">
-          <el-tab-pane label="文档" name="first">
+          <!-- <el-tab-pane label="文档" name="first">
             <el-table :data="tableData" border style="width:100%; text-align: left;" height="250">
               <el-table-column prop="date" label="文档创建时间">
               </el-table-column>
@@ -82,8 +82,8 @@
               <el-table-column prop="address" label="EntryID">
               </el-table-column>
             </el-table>
-          </el-tab-pane>
-          <el-tab-pane label="关联表" name="four">
+          </el-tab-pane> -->
+          <el-tab-pane label="关联表" name="first">
             <el-table :data="getAssociarionsData" border style="width:100%; text-align: left;" height="250">
               <el-table-column prop="associationType" label="AssociationType" width="115">
               </el-table-column>
@@ -112,6 +112,7 @@ export default {
       tableData:[],
       loading: false,
       searchForm: {
+        register_Url: "",
         repository_Url: "",
         associationType: "",
         uuid: "",
@@ -126,10 +127,13 @@ export default {
   },
   created() {
     this.searchForm.repository_Url = baseInfo.repository_Url;
+    this.searchForm.register_Url =baseInfo.register_Url;
   },
   methods: {
     getAssociations(formName) {
       const self = this;
+      this.searchForm.repository_Url = baseInfo.repository_Url;
+      this.searchForm.register_Url =baseInfo.register_Url;
       self.$refs[formName].validate(valid => {
         if (valid) {
           let url = "/consumer/getAssociations";

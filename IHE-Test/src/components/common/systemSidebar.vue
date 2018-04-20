@@ -8,7 +8,6 @@
     </el-menu>
   </el-aside>
 </template>
-
 <script>
 export default {
   data() {
@@ -30,8 +29,6 @@ export default {
               title: "其他配置",
               navIcon:"el-icon-star-off"
             }
-          
-        
       ]
     };
   },

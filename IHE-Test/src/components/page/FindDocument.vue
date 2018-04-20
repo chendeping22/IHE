@@ -23,7 +23,7 @@
 						</div>
 					</el-col>
 				</el-row>
-				<el-collapse v-model="activeNames">
+				<el-collapse v-model="activeCollapse">
 					<el-collapse-item title="" name="1">
 						<el-row>
 							<el-col :span="12">
@@ -165,27 +165,25 @@
 						</el-row>
 					</el-collapse-item>
 				</el-collapse>
-
 			</el-form>
-
 		</div>
+		<!-- 表格 -->
 		<div class="info-table">
-			<el-tabs v-model="activeName" type="border-card" @tab-click="handleClick">
+			<el-tabs v-model="activeTabs" type="border-card" @tab-click="handleClick">
 				<el-tab-pane label="文档" name="first">
 					<el-table :data="tableData" border style="width:100%; text-align: left;" height="250" fit>
 						<el-table-column prop="id" label="Id">
 						</el-table-column>
-						<el-table-column prop="creationTime" label="文档创建时间">
+						<el-table-column prop="creationTime" label="CreationTime">
 						</el-table-column>
-						<el-table-column prop="mimeType" label="文档类型mineType">
+						<el-table-column prop="mimeType" label="MineType">
 						</el-table-column>
-						<el-table-column prop="status" label="文档状态">
+						<el-table-column prop="status" label="Status">
 						</el-table-column>
-						<el-table-column prop="uniqueId" label="文档唯一标识">
+						<el-table-column prop="uniqueId" label="UniqueId">
 						</el-table-column>
-						<el-table-column prop="repositoryUniqueId" label="文档库唯一标识">
+						<el-table-column prop="repositoryUniqueId" label="RepositoryUniqueId">
 						</el-table-column>
-
 						<!-- <el-table-column prop="address" label="EntryID">
 						</el-table-column> -->
 						<el-table-column fixed="right" label="操作" width="100">
@@ -198,24 +196,22 @@
 				</el-tab-pane>
 			</el-tabs>
 		</div>
+		<!-- 表格end -->
 	</div>
 </template>
 
 <script>
-import { config, urlName } from "../../utils/config";
-import { urlTool, baseInfo } from "../../utils/common";
-import { FindDocumentBus } from "../../utils/bus";
+import { formatDuring, baseInfo } from "../../utils/common";
 export default {
   data() {
     return {
       tableData: [],
       loading: false,
-      activeName: "first",
-      xdsJson: {},
-      tableData: [],
-      activeNames: "",
+      activeTabs: "first",
+      activeCollapse: 1,
       searchForm: {
         repository_Url: "",
+        register_Url: "",
         patientId: "",
         status: "",
         classCode: "",
@@ -235,42 +231,35 @@ export default {
         returnType: "LeafClas"
       },
       searchRules: {
-        //      patientId: [],
-        //      status: [],
-        //      classCode: [],
-        //      typeCode: [],
-        //      practiceSettingCode: [],
-        //      healthcareFacilityTypeCode: [],
-        //      eventCodeList: [],
-        //      confidentialityCode: [],
-        //      authorPerson: [],
-        //      formatCode: [],
-        //      creationTimeFrom: [],
-        //      creationTimeTo: [],
-        //      serviceStarTimeFrom: [],
-        //      serviceStarTimeTo: []
+        // patientId: [
+        //   {
+        //     required: true,
+        //     message: "请输入patientId",
+        //     tigger: "blur"
+        //   }
+        // ],
+        // status: [
+        //   {
+        //     required: true,
+        //     message: "请选择status",
+        //     tigger: "blur"
+        //   }
+        // ],
       }
     };
   },
-  computed: {},
   created() {
-    console.log(baseInfo);
-    console.log("mounted");
-    // FindDocumentBus.$on("queryDocument", data => {
-    //   console.log(data);
-    //   this.searchForm.patientId = data[1];
-    //   this.searchForm.repository_Url = data[0];
-    //   console.log("文档传值");
-    // });
     this.searchForm.patientId = baseInfo.patientId;
     this.searchForm.repository_Url = baseInfo.repository_Url;
+    this.searchForm.register_Url = baseInfo.register_Url;
   },
   methods: {
-    FindDocument(formName) {
+    FindDocument(formName) {//查询文档
       const self = this;
-      console.log("111");
-      // let params = JSON.parse(JSON.stringify(this.searchForm));
-      // console.log(params);
+      this.searchForm.repository_Url = baseInfo.repository_Url;
+      this.searchForm.patientId = baseInfo.patientId;
+      this.searchForm.register_Url = baseInfo.register_Url;
+      console.log(this.searchForm.register_Url);
       self.$refs[formName].validate(valid => {
         if (valid) {
           let url = "/consumer/queryDoc";
@@ -278,6 +267,10 @@ export default {
           let params = JSON.parse(JSON.stringify(this.searchForm));
           console.log(params);
           self.$axios.post(url, params).then(res => {
+						//将返回的毫秒数转化为类似20071215132426格式
+            for (let i = 0; i < res.data.length; i++) {
+              res.data[i].creationTime = formatDuring(res.data[i].creationTime);
+            }
             console.log(res.data);
             this.tableData = res.data;
           });
@@ -286,8 +279,6 @@ export default {
     },
     handleClick(tab, event) {},
     cancelForm(formName) {
-      //取消编辑机构
-      // this.tableData = [];
       this.reset(formName);
     },
     reset(form) {

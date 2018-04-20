@@ -50,43 +50,32 @@
       <el-tabs v-model="activeName" type="border-card" @tab-click="handleClick">
         <el-tab-pane label="文档" name="first">
           <el-table :data="docListTable" border style="text-align: left;" height="250">
-            <el-table-column prop="creationTime" label="文档创建时间" width="110">
+            <el-table-column prop="creationTime" label="CreationTime" width="120">
             </el-table-column>
-            <el-table-column prop="mimeType" label="文档类型mineType" width="130">
+            <el-table-column prop="mimeType" label="MineType" width="130">
             </el-table-column>
-            <!-- <el-table-column prop="status" label="文档状态">
-                </el-table-column> -->
-            <el-table-column prop="id" label="EntryID">
+            <el-table-column prop="id" label="Id">
             </el-table-column>
             <el-table-column prop="uniqueId" label="UniqueId">
             </el-table-column>
-            <!-- <el-table-column prop="address" label="EntryID">
-                </el-table-column> -->
           </el-table>
         </el-tab-pane>
         <el-tab-pane label="文件夹" name="second">
           <el-table :data="folderListTable" border style="text-align: left;" height="250">
-            <el-table-column prop="lastUpdateTime" label="文件夹需改时间" width="110">
+            <el-table-column prop="lastUpdateTime" label="LastUpdateTime" width="120">
             </el-table-column>
-            <el-table-column prop="id" label="EntryID">
+            <el-table-column prop="id" label="ID">
             </el-table-column>
             <el-table-column prop="uniqueId" label="UniqueId">
             </el-table-column>
-            <!-- <el-table-column prop="address" label="EntryID">
-                </el-table-column> -->
           </el-table>
         </el-tab-pane>
         <el-tab-pane label="提交集" name="third">
           <el-table :data="submissionSetListTable" border style="text-align: left;" height="250">
-            <!-- <el-table-column prop="date" label="提交时间">
-                </el-table-column> -->
-            <!-- <el-table-column prop="name" label="提交集状态">
-                </el-table-column> -->
             <el-table-column prop="sourceId" label="SourceId" width="140">
             </el-table-column>
-            <el-table-column prop="id" label="EntryID">
+            <el-table-column prop="id" label="ID">
             </el-table-column>
-
             <el-table-column prop="uniqueId" label="UniqueId">
             </el-table-column>
           </el-table>
@@ -99,6 +88,7 @@
 </template>
 
 <script>
+import { formatDuring,baseInfo } from "../../utils/common";
 export default {
   data() {
     return {
@@ -108,6 +98,7 @@ export default {
       loading: false,
       activeName: "first",
       searchForm: {
+        register_Url:"",
         repository_Url: "",
         patientId: "",
         documentEntryStatus: "",
@@ -117,20 +108,28 @@ export default {
         documentEntryConfidentialityCode: ""
       },
       searchRules: {
-        PatientId: [],
-        DocumentEntryStatus: [],
-        SubmissionSetStatus: [],
-        FolderStatus: [],
-        DocumentEntryFomatCode: [],
-        DocEntryConfidentialityCode: []
+        // patientId: [
+        //   {
+        //     required: true,
+        //     message: "请输入patientId",
+        //     tigger: "blur"
+        //   }
+				// ],
       }
     };
   },
-  created() {},
+   created() {
+    this.searchForm.patientId = baseInfo.patientId;
+    this.searchForm.repository_Url = baseInfo.repository_Url;
+    this.searchForm.register_Url = baseInfo.register_Url;
+  },
   computed: {},
   methods: {
     getAll(formName) {
       const self = this;
+      this.searchForm.repository_Url = baseInfo.repository_Url;
+      this.searchForm.patientId = baseInfo.patientId;
+      this.searchForm.register_Url = baseInfo.register_Url;
       self.$refs[formName].validate(valid => {
         if (valid) {
           let url = "/consumer/getAll";
@@ -139,6 +138,18 @@ export default {
           console.log(params);
           self.$axios.post(url, params).then(res => {
             console.log(res.data);
+            //将返回的毫秒数转化为类似20071215132426格式
+            for(let i=0;i<res.data.docList.length;i++){
+              res.data.docList[i].creationTime = formatDuring(
+              res.data.docList[i].creationTime
+            );
+            }
+            for(let i=0;i<res.data.folderList.length;i++){
+              res.data.folderList[i].lastUpdateTime = formatDuring(
+              res.data.folderList[i].lastUpdateTime
+            );
+            }
+            res.data.docList.lastUpdateTime=formatDuring(res.data.docList.lastUpdateTime);
             this.docListTable = res.data.docList;
             this.folderListTable = res.data.folderList;
             this.submissionSetListTable = res.data.submissionSetList;

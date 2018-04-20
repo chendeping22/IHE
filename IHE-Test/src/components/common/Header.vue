@@ -16,23 +16,23 @@
         </el-col>
       </el-row>
     </div>
+    <!-- 通讯参数配置 -->
     <el-collapse v-model="activeNames" id="params">
       <el-collapse-item title="通讯参数配置" name="1">
         <el-form ref="paramSetform" :model="paramSetform" label-width="100px">
           <el-col :span="8">
             <el-form-item label="文档库" prop="repository_Url" style="text-align:left;">
-              <el-input v-model="paramSetform.repository_Url">
+              <el-input v-model="paramSetform.repository_Url" @change="changeRepository_Url">
               </el-input>
               <!-- <el-select v-model="paramSetform.repository_Url" placeholder="请选择文档库">
                 <el-option v-for="item in documentUrlOption" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
               </el-select> -->
-
             </el-form-item>
-            <el-form-item label="注册库" prop="registered_Url" style="text-align:left">
-              <el-input v-model="paramSetform.registered_Url">
+            <el-form-item label="注册库" prop="register_Url" style="text-align:left">
+              <el-input v-model="paramSetform.register_Url" @change="changeRegistered_Url">
               </el-input>
-              <!-- <el-select v-model="paramSetform.registered_Url" placeholder="请选择注册库">
+              <!-- <el-select v-model="paramSetform.register_Url" placeholder="请选择注册库">
                 <el-option v-for="item in registryUrlOption" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
               </el-select>-->
@@ -40,11 +40,11 @@
           </el-col>
           <el-col :span="7">
             <el-form-item label="PatientId" prop="patientId" style="text-align:left;">
-              <el-input v-model="paramSetform.patientId">
+              <el-input v-model="paramSetform.patientId" @change="changePatientId">
               </el-input>
             </el-form-item>
             <el-form-item label="sourceID" prop="sourceID">
-              <el-input v-model="paramSetform.sourceID">
+              <el-input v-model="paramSetform.sourceID" @change="changeSourceID">
               </el-input>
             </el-form-item>
           </el-col>
@@ -66,20 +66,18 @@
                   </el-radio-group>
                 </el-form-item>
               </el-col>
-              <!-- <el-button @click="testD">测试F</el-button>
-              <el-button @click="testS">测试D</el-button> -->
             </el-row>
-
           </el-col>
-
         </el-form>
       </el-collapse-item>
     </el-collapse>
-    <router-view v-bind:message=[paramSetform.registered_Url,paramSetform.patientId]></router-view>
+    <router-view></router-view>
+    <!-- <router-view v-bind:message=[paramSetform.register_Url,paramSetform.patientId]></router-view> -->
   </div>
 </template>
 <script>
-import {serverListbus,FindDocumentBus,FindSubmissionBus,FindFolder} from "../../utils/bus";
+import { serverListBus } from "../../utils/bus";
+import { baseInfo } from "../../utils/common";
 export default {
   data() {
     return {
@@ -108,7 +106,7 @@ export default {
       activeNames: ["1"],
       paramSetform: {
         repository_Url: "",
-        registered_Url: "",
+        register_Url: "",
         patientId: "",
         sourceID: "",
         soap: "2",
@@ -154,24 +152,20 @@ export default {
   },
 
   created() {
-    serverListbus.$on("repositoryHttpChild", data => {
+    //非父子组件传值
+    serverListBus.$on("repositoryHttpChild", data => {
       this.repositoryHttpParent(data);
     });
-    serverListbus.$on("repositoryHttpsChild", data => {
+    serverListBus.$on("repositoryHttpsChild", data => {
       this.repositoryHttpsParent(data);
     });
-    serverListbus.$on("registerHttpChild", data => {
+    serverListBus.$on("registerHttpChild", data => {
       this.registerHttpParent(data);
     });
-    serverListbus.$on("registerHttpsChild", data => {
+    serverListBus.$on("registerHttpsChild", data => {
       this.registerHttpsParent(data);
     });
   },
-  // beforeUpdate(){
-  //   FindDocumentBus.$emit("queryDocument", [this.paramSetform.repository_Url,this.paramSetform.patientId]);
-  //   FindSubmissionBus.$emit("querySubmission", [this.paramSetform.repository_Url,this.paramSetform.patientId]);
-  //   FindFolder.$emit("queryFolder", [this.paramSetform.repository_Url,this.paramSetform.patientId]);
-  // },
   computed: {
     onRoutes() {
       let str = "";
@@ -181,12 +175,20 @@ export default {
     }
   },
   methods: {
-    // testD:function(){
-    //    FindDocumentBus.$emit("queryDocument", [this.paramSetform.repository_Url,this.paramSetform.patientId]);
-    // },
-    //  testS:function(){
-    //    FindSubmissionBus.$emit("querySubmission", [this.paramSetform.repository_Url,this.paramSetform.patientId]);
-    // },
+    //当通讯参数配置输入框改动时，将数据更新存储到baseInfo对象中
+    changeRepository_Url: function() {
+      baseInfo.repository_Url = this.paramSetform.repository_Url;
+    },
+    changeRegistered_Url: function() {
+      baseInfo.register_Url = this.paramSetform.register_Url;
+    },
+    changePatientId: function() {
+      baseInfo.patientId = this.paramSetform.patientId;
+    },
+    changeSourceID: function() {
+      baseInfo.sourceId = this.paramSetform.sourceID;
+    },
+    //非父子组件传值，将其他组件回传的数据更新到表单
     repositoryHttpParent: function(data) {
       console.log(data);
       this.paramSetform.repository_Url = data;
@@ -197,16 +199,17 @@ export default {
     },
     registerHttpParent: function(data) {
       console.log(data);
-      this.paramSetform.registered_Url = data[0];
+      this.paramSetform.register_Url = data[0];
       this.paramSetform.patientId = data[1];
       this.paramSetform.sourceID = data[2];
     },
     registerHttpsParent: function(data) {
       console.log(data);
-      this.paramSetform.registered_Url = data[0];
+      this.paramSetform.register_Url = data[0];
       this.paramSetform.patientId = data[1];
       this.paramSetform.sourceID = data[2];
     },
+    //选择菜单跳转
     selectMenu(index, indexPath) {
       this.$router.replace("/" + index);
     }

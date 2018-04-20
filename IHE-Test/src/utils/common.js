@@ -1,18 +1,4 @@
-function urlTool(url, urlName) {
-  let urls = url + urlName;
-  if (process.env.NODE_ENV === 'development') {
-    urls = urlName;
-  }
-  return urls;
-}
-// function formatDuring(mss) {
-// //  var mouth=parseInt(mss % (1000 * 60 * 60 * 24)/());
-//   var days = parseInt(mss / (1000 * 60 * 60 * 24));
-//   var hours = parseInt((mss % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-//   var minutes = parseInt((mss % (1000 * 60 * 60)) / (1000 * 60));
-//   var seconds = (mss % (1000 * 60)) / 1000;
-//   return days + " 天 " + hours + " 小时 " + minutes + " 分钟 " + seconds + " 秒 ";
-// }
+//将毫秒设置为类似20170314123060的日期格式
 function formatDuring(str) {
   var oDate = new Date(str),
     oYear = oDate.getFullYear(),
@@ -21,21 +7,31 @@ function formatDuring(str) {
     oHour = oDate.getHours(),
     oMin = oDate.getMinutes(),
     oSen = oDate.getSeconds(),
-    oTime = oYear + getzf(oMonth) + getzf(oDay) + getzf(oHour) + getzf(oMin) + getzf(oSen); //最后拼接时间  
+    oTime = oYear + getzf(oMonth) + getzf(oDay) + getzf(oHour) + getzf(oMin) + getzf(oSen); //最后拼接时间
   return oTime;
 };
-
+//补零操作
 function getzf(num) {
   if (parseInt(num) < 10) {
     num = '0' + num;
   }
   return num;
 }
+
+//将正斜杠替换成反斜杠
+function pathReset(str){
+   var str1=str.replace(/\\/g,'/');
+   return str1
+}
+
+//配置参数
 const baseInfo = {
   patientId: '',
   repository_Url: '',
+  register_Url:'',
   sourceId: ''
 }
+//日志展示
 const showLog = {
   config: {
     data: '',
@@ -54,8 +50,8 @@ const showLog = {
 }
 
 export {
-  urlTool as urlTool,
   baseInfo as baseInfo,
   showLog as showLog,
-  formatDuring as formatDuring
+  formatDuring as formatDuring,
+  pathReset as pathReset
 }

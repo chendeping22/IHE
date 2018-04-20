@@ -99,7 +99,6 @@ export default {
             //   index: "getFoldersForDocument",
             //   title: "getFoldersForDocument"
             // },
-            
           ]
         }
       ]
