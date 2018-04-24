@@ -152,7 +152,8 @@ export default {
 			this.searchForm.register_Url = baseInfo.register_Url;
       self.$refs[formName].validate(valid => {
         if (valid) {
-          let url = "/consumer/querySubmissionSet";
+					let url = self.$apis.consumer.querySubmissionSet
+          //let url = "http://192.168.121.66:8080/consumer/querySubmissionSet";
           console.log(url);
           let params = JSON.parse(JSON.stringify(this.searchForm));
           console.log(params);

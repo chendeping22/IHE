@@ -7,10 +7,12 @@ import '../static/theme/index.css'
 import App from './App'
 import router from './router'
 import axios from 'axios'
+import apis from './utils/apis'
 
 Vue.config.productionTip = false
 
 Vue.prototype.$axios = axios
+Vue.prototype.$apis = apis
 
 Vue.use(ElementUI,{size:'mini'})
 /* eslint-disable no-new */

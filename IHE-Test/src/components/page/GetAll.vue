@@ -50,19 +50,26 @@
       <el-tabs v-model="activeName" type="border-card" @tab-click="handleClick">
         <el-tab-pane label="文档" name="first">
           <el-table :data="docListTable" border style="text-align: left;" height="250">
-            <el-table-column prop="creationTime" label="CreationTime" width="120">
+            <el-table-column prop="creationTime" label="CreationTime">
             </el-table-column>
-            <el-table-column prop="mimeType" label="MineType" width="130">
+            <el-table-column prop="mimeType" label="MineType">
             </el-table-column>
             <el-table-column prop="id" label="Id">
             </el-table-column>
             <el-table-column prop="uniqueId" label="UniqueId">
             </el-table-column>
+            <el-table-column prop="repositoryUniqueId" label="repositoryUniqueId">
+            </el-table-column>
+            <el-table-column fixed="right" label="操作" width="100">
+							<template slot-scope="scope">
+								<el-button type="text" size="small" @click="retrieveDocument(scope.row)">获取</el-button>
+							</template>
+						</el-table-column>
           </el-table>
         </el-tab-pane>
         <el-tab-pane label="文件夹" name="second">
           <el-table :data="folderListTable" border style="text-align: left;" height="250">
-            <el-table-column prop="lastUpdateTime" label="LastUpdateTime" width="120">
+            <el-table-column prop="lastUpdateTime" label="LastUpdateTime">
             </el-table-column>
             <el-table-column prop="id" label="ID">
             </el-table-column>
@@ -92,6 +99,11 @@ import { formatDuring,baseInfo } from "../../utils/common";
 export default {
   data() {
     return {
+      retrieveData: {
+        repository_Url: "",
+        uniqueId: "",
+        repositoryUniqueId: ""
+      },
       docListTable: [],
       folderListTable: [],
       submissionSetListTable: [],
@@ -132,7 +144,8 @@ export default {
       this.searchForm.register_Url = baseInfo.register_Url;
       self.$refs[formName].validate(valid => {
         if (valid) {
-          let url = "/consumer/getAll";
+          let url = self.$apis.consumer.getAll
+          //let url = "/consumer/getAll";
           console.log(url);
           let params = JSON.parse(JSON.stringify(this.searchForm));
           console.log(params);
@@ -155,6 +168,29 @@ export default {
             this.submissionSetListTable = res.data.submissionSetList;
           });
         }
+      });
+    },
+      retrieveDocument(row) {
+      const self = this;
+      this.retrieveData.repository_Url = baseInfo.repository_Url;
+      this.retrieveData.uniqueId = row.uniqueId;
+      this.retrieveData.repositoryUniqueId = row.repositoryUniqueId;
+      let url = self.$apis.consumer.retrieveDocument
+      //let url = "http://192.168.121.66:8080/consumer/retrieveDocument";
+      console.log(url);
+      let params = JSON.parse(JSON.stringify(this.retrieveData));
+      console.log(params);
+      self.$axios.post(url, params).then(res => {
+        console.log(res);
+				 if (res.data === "获取成功") {
+                console.log(res.status);
+                this.$message({
+                  message: res.data,
+                  type: "success"
+                });
+              } else {
+                this.$message.error("获取失败！");
+              }
       });
     },
     handleClick(tab, event) {},

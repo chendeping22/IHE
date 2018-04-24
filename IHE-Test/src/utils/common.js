@@ -27,8 +27,8 @@ function pathReset(str){
 //配置参数
 const baseInfo = {
   patientId: '',
-  repository_Url: '',
-  register_Url:'',
+  repository_Url: '',//文档库地址
+  register_Url:'',//注册库地址
   sourceId: ''
 }
 //日志展示
@@ -50,8 +50,8 @@ const showLog = {
 }
 
 export {
-  baseInfo as baseInfo,
-  showLog as showLog,
-  formatDuring as formatDuring,
-  pathReset as pathReset
+  baseInfo,
+  showLog,
+  formatDuring,
+  pathReset
 }

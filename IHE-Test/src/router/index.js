@@ -4,6 +4,7 @@ import Router from 'vue-router'
 Vue.use(Router)
 
 export default new Router({
+  mode: 'history',
   routes: [
     {
       path: '/404',
@@ -86,22 +87,22 @@ export default new Router({
               },
               component: resolve => require(['../components/page/GetDocument.vue'], resolve),
             },
-            {
-              path: '/getFolder',
-              meta: {
-                headerActive: 'query',
-                sidebarActive: 'getFolder',
-              },
-              component: resolve => require(['../components/page/GetFolder.vue'], resolve),
-            },
-            {
-              path: '/getSubmissionSet',
-              meta: {
-                headerActive: 'query',
-                sidebarActive: 'getSubmissionSet',
-              },
-              component: resolve => require(['../components/page/GetSubmissionSets.vue'], resolve),
-            },
+            // {
+            //   path: '/getFolder',
+            //   meta: {
+            //     headerActive: 'query',
+            //     sidebarActive: 'getFolder',
+            //   },
+            //   component: resolve => require(['../components/page/GetFolder.vue'], resolve),
+            // },
+            // {
+            //   path: '/getSubmissionSet',
+            //   meta: {
+            //     headerActive: 'query',
+            //     sidebarActive: 'getSubmissionSet',
+            //   },
+            //   component: resolve => require(['../components/page/GetSubmissionSets.vue'], resolve),
+            // },
             {
               path: '/getAssociations',
               meta: {
@@ -110,22 +111,22 @@ export default new Router({
               },
               component: resolve => require(['../components/page/getAssociations.vue'], resolve),
             },
-            {
-              path: '/getDocumentsAndAssociations',
-              meta: {
-                headerActive: 'query',
-                sidebarActive: 'getDocumentsAndAssociations',
-              },
-              component: resolve => require(['../components/page/getDocumentsAndAssociations.vue'], resolve),
-            },
-            {
-              path: '/getSubmissionSetAndContents',
-              meta: {
-                headerActive: 'query',
-                sidebarActive: 'getSubmissionSetAndContents',
-              },
-              component: resolve => require(['../components/page/getSubmissionSetAndContents.vue'], resolve),
-            },
+            // {
+            //   path: '/getDocumentsAndAssociations',
+            //   meta: {
+            //     headerActive: 'query',
+            //     sidebarActive: 'getDocumentsAndAssociations',
+            //   },
+            //   component: resolve => require(['../components/page/getDocumentsAndAssociations.vue'], resolve),
+            // },
+            // {
+            //   path: '/getSubmissionSetAndContents',
+            //   meta: {
+            //     headerActive: 'query',
+            //     sidebarActive: 'getSubmissionSetAndContents',
+            //   },
+            //   component: resolve => require(['../components/page/getSubmissionSetAndContents.vue'], resolve),
+            // },
             {
               path: '/getFolderAndContents',
               meta: {
@@ -134,14 +135,14 @@ export default new Router({
               },
               component: resolve => require(['../components/page/getFolderAndContents.vue'], resolve),
             },
-            {
-              path: '/getFoldersForDocument',
-              meta: {
-                headerActive: 'query',
-                sidebarActive: 'getFoldersForDocument',
-              },
-              component: resolve => require(['../components/page/getFoldersForDocument.vue'], resolve),
-            },
+            // {
+            //   path: '/getFoldersForDocument',
+            //   meta: {
+            //     headerActive: 'query',
+            //     sidebarActive: 'getFoldersForDocument',
+            //   },
+            //   component: resolve => require(['../components/page/getFoldersForDocument.vue'], resolve),
+            // },
             {
               path: '/getRelatedDocument',
               meta: {
@@ -207,13 +208,13 @@ export default new Router({
         //   },
         //   component: resolve => require(['../components/page/imageFile.vue'], resolve),
         // },
-        {
-          path: '/wado',
-          meta: {
-            headerActive: 'wado'
-          },
-          component: resolve => require(['../components/page/wado.vue'], resolve),
-        },
+        // {
+        //   path: '/wado',
+        //   meta: {
+        //     headerActive: 'wado'
+        //   },
+        //   component: resolve => require(['../components/page/wado.vue'], resolve),
+        // },
       ]
     },
   ]

@@ -188,8 +188,7 @@
 						</el-table-column> -->
 						<el-table-column fixed="right" label="操作" width="100">
 							<template slot-scope="scope">
-								<el-button type="text" size="small">获取</el-button>
-								<el-button type="text" size="small">解析</el-button>
+								<el-button type="text" size="small" @click="retrieveDocument(scope.row)">获取</el-button>
 							</template>
 						</el-table-column>
 					</el-table>
@@ -205,6 +204,11 @@ import { formatDuring, baseInfo } from "../../utils/common";
 export default {
   data() {
     return {
+      retrieveData: {
+        repository_Url: "",
+        uniqueId: "",
+        repositoryUniqueId: ""
+      },
       tableData: [],
       loading: false,
       activeTabs: "first",
@@ -254,7 +258,8 @@ export default {
     this.searchForm.register_Url = baseInfo.register_Url;
   },
   methods: {
-    FindDocument(formName) {//查询文档
+    FindDocument(formName) {
+      //查询文档
       const self = this;
       this.searchForm.repository_Url = baseInfo.repository_Url;
       this.searchForm.patientId = baseInfo.patientId;
@@ -262,12 +267,13 @@ export default {
       console.log(this.searchForm.register_Url);
       self.$refs[formName].validate(valid => {
         if (valid) {
-          let url = "/consumer/queryDoc";
-          console.log(url);
+          //let url = "http://192.168.121.66:8080/consumer/queryDoc";
+					//console.log(url);
+					 let url = self.$apis.consumer.queryDoc
           let params = JSON.parse(JSON.stringify(this.searchForm));
           console.log(params);
           self.$axios.post(url, params).then(res => {
-						//将返回的毫秒数转化为类似20071215132426格式
+            //将返回的毫秒数转化为类似20071215132426格式
             for (let i = 0; i < res.data.length; i++) {
               res.data[i].creationTime = formatDuring(res.data[i].creationTime);
             }
@@ -275,6 +281,29 @@ export default {
             this.tableData = res.data;
           });
         }
+      });
+    },
+    retrieveDocument(row) {
+      const self = this;
+      this.retrieveData.repository_Url = baseInfo.repository_Url;
+      this.retrieveData.uniqueId = row.uniqueId;
+      this.retrieveData.repositoryUniqueId = row.repositoryUniqueId;
+      //let url = "http://192.168.121.66:8080/consumer/retrieveDocument";
+			//console.log(url);
+			let url = self.$apis.consumer.retrieveDocument
+      let params = JSON.parse(JSON.stringify(this.retrieveData));
+      console.log(params);
+      self.$axios.post(url, params).then(res => {
+        console.log(res);
+				 if (res.data === "获取成功") {
+                console.log(res.status);
+                this.$message({
+                  message: res.data,
+                  type: "success"
+                });
+              } else {
+                this.$message.error("获取失败！");
+              }
       });
     },
     handleClick(tab, event) {},

@@ -280,7 +280,8 @@ export default {
   methods: {
     getData() {
       let self = this;
-      let url = "/systemConfig/queryAll";
+       let url = self.$apis.systemConfig.queryAll
+      //let url = "http://192.168.121.66:8080/systemConfig/queryAll";
       self.$axios.post(url).then(res => {
         this.tableData = res.data;
       });
@@ -289,7 +290,8 @@ export default {
       const self = this;
       self.$refs[formName].validate(valid => {
         if (valid) {
-          let url = "/systemConfig/addAndUpdate";
+          let url = self.$apis.systemConfig.addAndUpdate
+          //let url = "http://192.168.121.66:8080/systemConfig/addAndUpdate";
           console.log(url);
           let params = JSON.parse(JSON.stringify(this.addForm));
           console.log(params);
@@ -315,7 +317,8 @@ export default {
       const self = this;
       self.$refs[formName].validate(valid => {
         if (valid) {
-          let url = "/systemConfig/addAndUpdate";
+          let url = self.$apis.systemConfig.addAndUpdate
+          //let url = "http://192.168.121.66:8080/systemConfig/addAndUpdate";
           console.log(url);
           let params = JSON.parse(JSON.stringify(this.changeForm));
           console.log(params);
@@ -361,40 +364,37 @@ export default {
     },
     delInfo(index, row) {
       const self = this;
-      let url = "/systemConfig/delete";
+      let url = self.$apis.systemConfig.delete
+      //let url = "http://192.168.121.66:8080/systemConfig/delete";
       self.delForm.id = row.id;
       let params = JSON.parse(JSON.stringify(this.delForm));
       console.log(params);
-      self.$axios
-        .post(url, params)
-        .then(res => {
-          this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            type: "warning"
-          })
-            .then(() => {
+      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          self.$axios
+            .post(url, params)
+            .then(res => {
               if (res.data === "删除成功") {
                 this.$message.success(res.data);
                 this.getData();
-                // setTimeout(function() {
-                //   document.location.reload(true);
-                // }, 3000);
               } else {
                 this.$message.error(res.data);
-              }
+              } 
+              console.log(res);
             })
-            .catch(() => {
-              this.$message({
-                type: "info",
-                message: "已取消删除"
-              });
+            .catch(err => {
+              console.log(err);
             });
-
-          console.log(res);
         })
-        .catch(err => {
-          console.log(err);
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
         });
     },
     cancelAddForm(cancelForm) {
@@ -441,7 +441,7 @@ export default {
           row.patientId,
           row.sourceId
         ]);
-        baseInfo.register_Url=row.registerHttp;
+        baseInfo.register_Url = row.registerHttp;
         baseInfo.patientId = row.patientId;
         baseInfo.sourceId = row.sourceId;
       };
@@ -461,7 +461,7 @@ export default {
           row.patientId,
           row.sourceId
         ]);
-        baseInfo.register_Url=row.registerHttps;
+        baseInfo.register_Url = row.registerHttps;
         baseInfo.patientId = row.patientId;
         baseInfo.sourceId = row.sourceId;
       };

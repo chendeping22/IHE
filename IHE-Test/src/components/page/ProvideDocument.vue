@@ -325,9 +325,10 @@ export default {
         if (valid) {
           if (this.submitForm.associate === "") {
             //到文档操作值为空时，调用提交文档接口
-            let url = "/source/sendDoc";
+            //let url = "http://192.168.121.66:8080/source/sendDoc";
             //console.log(this.submitForm.repository_Url)
-            let params = JSON.parse(JSON.stringify(this.submitForm));
+            let url = self.$apis.source.sendDoc
+            let params = JSON.parse(JSON.stringify(this.submitForm));//拷贝一份参数
             //移除整个表单内本接口不需要提交的字段
             delete params.existed_Uuid;
             delete params.associate;
@@ -348,8 +349,9 @@ export default {
             });
           } else {
             //当文档操作值不为空时，调用文档操作的接口
-            let url = "/source/sendDoc";
+            //let url = "http://192.168.121.66:8080/source/sendDoc";
             //console.log(url);
+            let url = self.$apis.source.sendDoc
             let params = JSON.parse(JSON.stringify(this.submitForm));
             delete params.existed_Uuid;
             console.log(params);
@@ -379,7 +381,8 @@ export default {
       this.submitForm.patientId = baseInfo.patientId;
       self.$refs[formName].validate(valid => {
         if (valid) {
-          let url = "/source/sendFolder";
+          //let url = "http://192.168.121.66:8080/source/sendFolder";
+          let url = self.$apis.source.sendFolder
           let params = JSON.parse(JSON.stringify(self.submitForm));
           delete params.existed_Uuid;
           delete params.associate;
@@ -414,8 +417,9 @@ export default {
       this.submitForm.patientId = baseInfo.patientId;
       self.$refs[formName].validate(valid => {
         if (valid) {
-          let url = "/source/sendDocToFolder";
+          //let url = "http://192.168.121.66:8080/source/sendDocToFolder";
           console.log(url);
+          let url = self.$apis.source.sendDocToFolder
           let params = JSON.parse(JSON.stringify(this.submitForm));
           delete params.associate;
           delete params.existedDocId;

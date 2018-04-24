@@ -136,7 +136,8 @@ export default {
       this.searchForm.register_Url =baseInfo.register_Url;
       self.$refs[formName].validate(valid => {
         if (valid) {
-          let url = "/consumer/getAssociations";
+          let url = self.$apis.consumer.getAssociations
+          //let url = "/consumer/getAssociations";
           console.log(url);
           let params = JSON.parse(JSON.stringify(this.searchForm));
           console.log(params);
