@@ -63,6 +63,11 @@
             </el-table-column>
             <el-table-column prop="id" label="EntryID">
             </el-table-column>
+            	<el-table-column fixed="right" label="操作" width="100">
+							<template slot-scope="scope">
+								<el-button type="text" size="small" @click="retrieveDocument(scope.row)">获取</el-button>
+							</template>
+						</el-table-column>
           </el-table>
         </el-tab-pane>
         <el-tab-pane label="文件夹" name="second">
@@ -86,6 +91,12 @@ import { formatDuring, baseInfo } from "../../utils/common";
 export default {
   data() {
     return {
+       retrieveData: {
+        repository_Url: "",
+        uniqueId: "",
+        repositoryUniqueId: "",
+        status:""
+      },
       extrinsicObjectList: [],
       folderList: [],
       loading: false,
@@ -93,7 +104,7 @@ export default {
       searchForm: {
         register_Url: "",
         repository_Url: "",
-        folderEntryUUID: "urn:uuid:e4515d65-fb3d-4aed-9c26-19231bf41007",
+        folderEntryUUID: "",
         folderUniqueId: "",
         DocumentEntryFormatCode: "",
         DocumentEntryConfidentialityCode: "",
@@ -144,6 +155,30 @@ export default {
             this.folderList = res.data.folderList;
           });
         }
+      });
+    },
+     retrieveDocument(row) {
+      const self = this;
+      this.retrieveData.repository_Url = baseInfo.repository_Url;
+      this.retrieveData.uniqueId = row.uniqueId;
+      this.retrieveData.repositoryUniqueId = row.repositoryUniqueId;
+      this.retrieveData.status=row.status;
+      let url = self.$apis.consumer.retrieveDocument
+      //let url = "http://192.168.121.66:8080/consumer/retrieveDocument";
+      console.log(url);
+      let params = JSON.parse(JSON.stringify(this.retrieveData));
+      console.log(params);
+      self.$axios.post(url, params).then(res => {
+        console.log(res);
+				 if (res.data === "success") {
+                console.log(res.status);
+                this.$message({
+                  message: "获取成功",
+                  type: "success"
+                });
+              } else {
+                this.$message.error(res.data);
+              }
       });
     },
     cancelForm(formName) {

@@ -121,7 +121,6 @@ export default {
 		this.searchForm.repository_Url = baseInfo.repository_Url;
 		this.searchForm.register_Url = baseInfo.register_Url;
   },
-  computed: {},
   methods: {
     FindFolder(formName) {//查询文件夹
 			const self = this;

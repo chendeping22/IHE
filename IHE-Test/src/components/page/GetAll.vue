@@ -50,15 +50,17 @@
       <el-tabs v-model="activeName" type="border-card" @tab-click="handleClick">
         <el-tab-pane label="文档" name="first">
           <el-table :data="docListTable" border style="text-align: left;" height="250">
-            <el-table-column prop="creationTime" label="CreationTime">
+            <el-table-column prop="creationTime" label="CreationTime" width="150">
             </el-table-column>
-            <el-table-column prop="mimeType" label="MineType">
+            <el-table-column prop="mimeType" label="MineType" width="120">
             </el-table-column>
-            <el-table-column prop="id" label="Id">
+            <el-table-column prop="id" label="Id" width="250">
             </el-table-column>
-            <el-table-column prop="uniqueId" label="UniqueId">
+            <el-table-column prop="status" label="status" width="250">
             </el-table-column>
-            <el-table-column prop="repositoryUniqueId" label="repositoryUniqueId">
+            <el-table-column prop="uniqueId" label="UniqueId" width="260">
+            </el-table-column>
+            <el-table-column prop="repositoryUniqueId" label="repositoryUniqueId" width="150">
             </el-table-column>
             <el-table-column fixed="right" label="操作" width="100">
 							<template slot-scope="scope">
@@ -69,11 +71,11 @@
         </el-tab-pane>
         <el-tab-pane label="文件夹" name="second">
           <el-table :data="folderListTable" border style="text-align: left;" height="250">
-            <el-table-column prop="lastUpdateTime" label="LastUpdateTime">
+            <el-table-column prop="lastUpdateTime" label="LastUpdateTime" width="150">
             </el-table-column>
-            <el-table-column prop="id" label="ID">
+            <el-table-column prop="id" label="ID" width="400">
             </el-table-column>
-            <el-table-column prop="uniqueId" label="UniqueId">
+            <el-table-column prop="uniqueId" label="UniqueId" width="500">
             </el-table-column>
           </el-table>
         </el-tab-pane>
@@ -102,7 +104,8 @@ export default {
       retrieveData: {
         repository_Url: "",
         uniqueId: "",
-        repositoryUniqueId: ""
+        repositoryUniqueId: "",
+        status:""
       },
       docListTable: [],
       folderListTable: [],
@@ -175,6 +178,7 @@ export default {
       this.retrieveData.repository_Url = baseInfo.repository_Url;
       this.retrieveData.uniqueId = row.uniqueId;
       this.retrieveData.repositoryUniqueId = row.repositoryUniqueId;
+      this.retrieveData.status=row.status;
       let url = self.$apis.consumer.retrieveDocument
       //let url = "http://192.168.121.66:8080/consumer/retrieveDocument";
       console.log(url);
@@ -182,14 +186,14 @@ export default {
       console.log(params);
       self.$axios.post(url, params).then(res => {
         console.log(res);
-				 if (res.data === "获取成功") {
+				 if (res.data === "success") {
                 console.log(res.status);
                 this.$message({
                   message: res.data,
                   type: "success"
                 });
               } else {
-                this.$message.error("获取失败！");
+                this.$message.error(res.data);
               }
       });
     },

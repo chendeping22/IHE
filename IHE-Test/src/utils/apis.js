@@ -12,13 +12,14 @@ const apis = {
    },
  consumer:{
   queryDoc: `${baseUrl}/consumer/queryDoc`,
-  querySubmissionSets: `${baseUrl}/consumer/querySubmissionSets`,
+  querySubmissionSet: `${baseUrl}/consumer/querySubmissionSet`,
   queryFolder: `${baseUrl}/consumer/queryFolder`,
   getAll: `${baseUrl}/consumer/getAll`,
   getDocuments: `${baseUrl}/consumer/getDocuments`,
   getAssociations: `${baseUrl}/consumer/getAssociations`,
   getFolderAndContents: `${baseUrl}/consumer/getFolderAndContents`,
   retrieveDocument: `${baseUrl}/consumer/retrieveDocument`,
+  getRelatedDocument: `${baseUrl}/consumer/getRelatedDocument`,
 
  },
  systemConfig:{

@@ -3,13 +3,20 @@
     <el-row>
       <el-col :span="20">
         <div id="logContent">
-          <p style="color:red">{{data}}</p>
+          <!-- <p style="color:red">{{data}}</p>
           <p style="color:blue">{{configHeaders}}</p>
           <p style="color:yellow">{{date}}</p>
           <p style="color:orange">{{headers}}</p>
           <p style="color:red">{{responseURL}}</p>
           <p style="color:red">{{status}}</p>
-          <p style="color:red">{{statusText}}</p>
+          <p style="color:red">{{statusText}}</p> -->
+          <p>{{data}}</p>
+          <p>{{configHeaders}}</p>
+          <p>{{date}}</p>
+          <p>{{headers}}</p>
+          <p>{{responseURL}}</p>
+          <p>{{status}}</p>
+          <p>{{statusText}}</p>
         </div>
       </el-col>
       <el-col :span="4">
@@ -73,5 +80,7 @@ export default {
   height: 600px;
   overflow: hidden;
   margin-left: 10px;
+  font-size: 10px;
+  text-align: left;
 }
 </style>

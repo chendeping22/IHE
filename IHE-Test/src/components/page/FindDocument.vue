@@ -207,7 +207,8 @@ export default {
       retrieveData: {
         repository_Url: "",
         uniqueId: "",
-        repositoryUniqueId: ""
+        repositoryUniqueId: "",
+				status:""
       },
       tableData: [],
       loading: false,
@@ -273,6 +274,7 @@ export default {
           let params = JSON.parse(JSON.stringify(this.searchForm));
           console.log(params);
           self.$axios.post(url, params).then(res => {
+						console.log(res.data);
             //将返回的毫秒数转化为类似20071215132426格式
             for (let i = 0; i < res.data.length; i++) {
               res.data[i].creationTime = formatDuring(res.data[i].creationTime);
@@ -288,6 +290,7 @@ export default {
       this.retrieveData.repository_Url = baseInfo.repository_Url;
       this.retrieveData.uniqueId = row.uniqueId;
       this.retrieveData.repositoryUniqueId = row.repositoryUniqueId;
+			this.retrieveData.status=row.status
       //let url = "http://192.168.121.66:8080/consumer/retrieveDocument";
 			//console.log(url);
 			let url = self.$apis.consumer.retrieveDocument
@@ -295,14 +298,14 @@ export default {
       console.log(params);
       self.$axios.post(url, params).then(res => {
         console.log(res);
-				 if (res.data === "获取成功") {
+				 if (res.data === "success") {
                 console.log(res.status);
                 this.$message({
                   message: res.data,
                   type: "success"
                 });
               } else {
-                this.$message.error("获取失败！");
+                this.$message.error(res.data);
               }
       });
     },
