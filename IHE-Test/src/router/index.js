@@ -1,7 +1,7 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import Vue from 'vue';
+import Router from 'vue-router';
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
   mode: 'history',
@@ -11,33 +11,36 @@ export default new Router({
       meta: {
         requiresAuth: false,
       },
-      component: resolve => require(['../components/error/404.vue'], resolve)
+      component: resolve => require(['../components/error/404.vue'], resolve),
     },
     {
       path: '/',
-      redirect: '/login'
+      redirect: '/login',
     },
     {
       path: '/login',
-      component: resolve => require(['../components/page/Login.vue'], resolve)
-  },
-    // {
-    //   path: '*',
-    //   redirect: '/404'
-    // },
+      component: resolve => require(['../components/page/Login.vue'], resolve),
+    },
+    {
+      path: '*',
+      redirect: '/404'
+    },
     {
       path: '/provideDocument',
       meta: {
-        headerActive: 'provideDocument'
+        headerActive: 'provideDocument',
       },
-      component: resolve => require(['../components/common/Header.vue'], resolve),
+      component: resolve =>
+        require(['../components/common/Header.vue'], resolve),
       children: [
         {
           path: '/provideDocument',
           meta: {
-            headerActive: 'provideDocument'
+            headerActive: 'provideDocument',
           },
-          component: resolve => require(['../components/page/ProvideDocument.vue'], resolve),
+          // component: resolve =>
+          //   require(['../components/page/ProvideDocument.vue'], resolve),
+          component:() => import('../components/page/ProvideDocument.vue')
         },
         {
           path: '/query',
@@ -45,7 +48,8 @@ export default new Router({
             headerActive: 'query',
           },
           redirect: '/findDocument',
-          component: resolve => require(['../components/page/QueryContainer.vue'], resolve),
+          component: resolve =>
+            require(['../components/page/QueryContainer.vue'], resolve),
           children: [
             {
               path: '/findDocument',
@@ -53,7 +57,8 @@ export default new Router({
                 headerActive: 'query',
                 sidebarActive: 'findDocument',
               },
-              component: resolve => require(['../components/page/FindDocument.vue'], resolve),
+              component: resolve =>
+                require(['../components/page/FindDocument.vue'], resolve),
             },
             {
               path: '/findFolder',
@@ -61,7 +66,8 @@ export default new Router({
                 headerActive: 'query',
                 sidebarActive: 'findFolder',
               },
-              component: resolve => require(['../components/page/FindFolder.vue'], resolve),
+              component: resolve =>
+                require(['../components/page/FindFolder.vue'], resolve),
             },
             {
               path: '/findSubmissionSet',
@@ -69,7 +75,8 @@ export default new Router({
                 headerActive: 'query',
                 sidebarActive: 'findSubmissionSet',
               },
-              component: resolve => require(['../components/page/FindSubmissionSet.vue'], resolve),
+              component: resolve =>
+                require(['../components/page/FindSubmissionSet.vue'], resolve),
             },
             {
               path: '/getAll',
@@ -77,7 +84,8 @@ export default new Router({
                 headerActive: 'query',
                 sidebarActive: 'getAll',
               },
-              component: resolve => require(['../components/page/GetAll.vue'], resolve),
+              component: resolve =>
+                require(['../components/page/GetAll.vue'], resolve),
             },
             {
               path: '/getDocument',
@@ -85,89 +93,57 @@ export default new Router({
                 headerActive: 'query',
                 sidebarActive: 'getDocument',
               },
-              component: resolve => require(['../components/page/GetDocument.vue'], resolve),
+              component: resolve =>
+                require(['../components/page/GetDocument.vue'], resolve),
             },
-            // {
-            //   path: '/getFolder',
-            //   meta: {
-            //     headerActive: 'query',
-            //     sidebarActive: 'getFolder',
-            //   },
-            //   component: resolve => require(['../components/page/GetFolder.vue'], resolve),
-            // },
-            // {
-            //   path: '/getSubmissionSet',
-            //   meta: {
-            //     headerActive: 'query',
-            //     sidebarActive: 'getSubmissionSet',
-            //   },
-            //   component: resolve => require(['../components/page/GetSubmissionSets.vue'], resolve),
-            // },
             {
               path: '/getAssociations',
               meta: {
                 headerActive: 'query',
                 sidebarActive: 'getAssociations',
               },
-              component: resolve => require(['../components/page/getAssociations.vue'], resolve),
+              component: resolve =>
+                require(['../components/page/getAssociations.vue'], resolve),
             },
-            // {
-            //   path: '/getDocumentsAndAssociations',
-            //   meta: {
-            //     headerActive: 'query',
-            //     sidebarActive: 'getDocumentsAndAssociations',
-            //   },
-            //   component: resolve => require(['../components/page/getDocumentsAndAssociations.vue'], resolve),
-            // },
-            // {
-            //   path: '/getSubmissionSetAndContents',
-            //   meta: {
-            //     headerActive: 'query',
-            //     sidebarActive: 'getSubmissionSetAndContents',
-            //   },
-            //   component: resolve => require(['../components/page/getSubmissionSetAndContents.vue'], resolve),
-            // },
             {
               path: '/getFolderAndContents',
               meta: {
                 headerActive: 'query',
                 sidebarActive: 'getFolderAndContents',
               },
-              component: resolve => require(['../components/page/getFolderAndContents.vue'], resolve),
+              component: resolve =>
+                require([
+                  '../components/page/getFolderAndContents.vue',
+                ], resolve),
             },
-            // {
-            //   path: '/getFoldersForDocument',
-            //   meta: {
-            //     headerActive: 'query',
-            //     sidebarActive: 'getFoldersForDocument',
-            //   },
-            //   component: resolve => require(['../components/page/getFoldersForDocument.vue'], resolve),
-            // },
             {
               path: '/getRelatedDocument',
               meta: {
                 headerActive: 'query',
                 sidebarActive: 'getRelatedDocument',
               },
-              component: resolve => require(['../components/page/getRelatedDocument.vue'], resolve),
+              component: resolve =>
+                require(['../components/page/getRelatedDocument.vue'], resolve),
             },
-          ]
+          ],
         },
         {
           path: '/systemSet',
           meta: {
-            headerActive: 'systemSet'
+            headerActive: 'systemSet',
           },
           redirect: '/serverList',
-          component: resolve => require(['../components/page/systemContainer.vue'], resolve),
-          children:[
+          component: resolve =>
+            require(['../components/page/systemContainer.vue'], resolve),
+          children: [
             {
               path: '/serverList',
               meta: {
                 headerActive: 'systemSet',
                 sidebarActive: 'serverList',
               },
-              component: resolve => require(['../components/page/serverList.vue'], resolve),
+              component: resolve =>
+                require(['../components/page/serverList.vue'], resolve),
             },
             {
               path: '/submitSet',
@@ -175,7 +151,8 @@ export default new Router({
                 headerActive: 'systemSet',
                 sidebarActive: 'submitSet',
               },
-              component: resolve => require(['../components/page/submitSet.vue'], resolve),
+              component: resolve =>
+                require(['../components/page/submitSet.vue'], resolve),
             },
             {
               path: '/otherSet',
@@ -183,39 +160,28 @@ export default new Router({
                 headerActive: 'systemSet',
                 sidebarActive: 'otherSet',
               },
-              component: resolve => require(['../components/page/otherSet.vue'], resolve),
+              component: resolve =>
+                require(['../components/page/otherSet.vue'], resolve),
             },
-          ]
+          ],
         },
         {
           path: '/registryData',
           meta: {
-            headerActive: 'registryData'
+            headerActive: 'registryData',
           },
-          component: resolve => require(['../components/page/registryData.vue'], resolve),
+          component: resolve =>
+            require(['../components/page/registryData.vue'], resolve),
         },
         {
           path: '/log',
           meta: {
-            headerActive: 'log'
+            headerActive: 'log',
           },
-          component: resolve => require(['../components/page/log.vue'], resolve),
+          component: resolve =>
+            require(['../components/page/log.vue'], resolve),
         },
-        // {
-        //   path: '/imageFile',
-        //   meta: {
-        //     headerActive: 'imageFile'
-        //   },
-        //   component: resolve => require(['../components/page/imageFile.vue'], resolve),
-        // },
-        // {
-        //   path: '/wado',
-        //   meta: {
-        //     headerActive: 'wado'
-        //   },
-        //   component: resolve => require(['../components/page/wado.vue'], resolve),
-        // },
-      ]
+      ],
     },
-  ]
-})
+  ],
+});

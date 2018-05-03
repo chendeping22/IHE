@@ -1,4 +1,3 @@
-
 <template>
   <div v-loading="loading"
        element-loading-text="拼命加载中"
@@ -384,9 +383,12 @@ export default {
             let url = self.$apis.source.sendDoc;
             let params = JSON.parse(JSON.stringify(this.submitForm)); //拷贝一份参数
             //移除整个表单内本接口不需要提交的字段
-            delete params.existed_Uuid;
-            delete params.associate;
-            delete params.existedDocId;
+            // delete params.existed_Uuid;
+            // delete params.associate;
+            // delete params.existedDocId;
+            params.existed_Uuid = undefined
+            params.associate = undefined
+            params.existedDocId = undefined
             console.log(params);
             self.$axios.post(url, params).then(res => {
               console.log(res);
@@ -427,7 +429,6 @@ export default {
         }
       });
     },
-
     SendFolder(formName) {
       //提交文件夹
       const self = this;
@@ -438,15 +439,24 @@ export default {
           //let url = "http://192.168.121.66:8080/source/sendFolder";
           let url = self.$apis.source.sendFolder;
           let params = JSON.parse(JSON.stringify(self.submitForm));
-          delete params.existed_Uuid;
-          delete params.associate;
-          delete params.existedDocId;
-          delete params.fileName;
-          delete params.extrinsic_Author_Person;
-          delete params.extrinsicConfidentialityCode;
-          delete params.extrinsic_Author_Institution;
-          delete params.extrinsic_Author_Role;
-          delete params.extrinsic_Author_Specialty;
+          // delete params.existed_Uuid;
+          // delete params.associate;
+          // delete params.existedDocId;
+          // delete params.fileName;
+          // delete params.extrinsic_Author_Person;
+          // delete params.extrinsicConfidentialityCode;
+          // delete params.extrinsic_Author_Institution;
+          // delete params.extrinsic_Author_Role;
+          // delete params.extrinsic_Author_Specialty;
+          params.existed_Uuid = undefined
+          params.associate = undefined
+          params.existedDocId = undefined
+          params.fileName = undefined
+          params.extrinsic_Author_Person = undefined
+          params.extrinsicConfidentialityCode = undefined
+          params.extrinsic_Author_Institution = undefined
+          params.extrinsic_Author_Role = undefined
+          params.extrinsic_Author_Specialty = undefined
           console.log(params);
           self.$axios.post(url, params).then(res => {
             console.log(res);
@@ -476,8 +486,10 @@ export default {
           console.log(url);
           let url = self.$apis.source.sendDocToFolder;
           let params = JSON.parse(JSON.stringify(this.submitForm));
-          delete params.associate;
-          delete params.existedDocId;
+          // delete params.associate;
+          // delete params.existedDocId;
+          params.associate = undefined
+          params.existedDocId= undefined
           console.log(params);
           self.$axios.post(url, params).then(res => {
             console.log(res);

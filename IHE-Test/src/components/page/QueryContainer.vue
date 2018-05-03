@@ -13,12 +13,10 @@
 </template>
 
 <script>
-//import vParam from "../common/param";
 import vSidebar from "../common/QuerySidebar";
 export default {
   components: {
 		vSidebar,
-		//vParam
   }
 };
 </script>

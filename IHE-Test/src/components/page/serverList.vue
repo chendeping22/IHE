@@ -130,12 +130,12 @@
       </template>
 
       <!--自定义右键菜单html代码-->
-      <div id="menu">
-        <div class="menu" id="repositoryHttp">文档库-http(H)</div>
-        <div class="menu" id="registerHttp">注册库-http(T)</div>
-        <div class="menu" id="repositoryHttps">文档库-https(P)</div>
-        <div class="menu" id="registerHttps">注册库-https(S)</div>
-        <div class="menu" id="documentHttp">设为影响文档源(Z)</div>
+      <div id="menu" ref="menu">
+        <div class="menu" id="repositoryHttp" ref="repositoryHttp" >文档库-http(H)</div>
+        <div class="menu" id="registerHttp" ref="registerHttp">注册库-http(T)</div>
+        <div class="menu" id="repositoryHttps" ref="repositoryHttps">文档库-https(P)</div>
+        <div class="menu" id="registerHttps" ref="registerHttps">注册库-https(S)</div>
+        <div class="menu" id="documentHttp" ref="documentHttp">设为影响文档源(Z)</div>
       </div>
     </div>
   </el-container>
@@ -410,7 +410,9 @@ export default {
       //取消默认的浏览器自带右键 很重要！！
       e.preventDefault();
       //获取我们自定义的右键菜单
-      var menu = document.querySelector("#menu");
+      // var menu = document.querySelector("#menu");
+      var menu = this.$refs['menu']
+      console.log(this.$refs['menu'])
       //根据事件对象中鼠标点击的位置，进行定位
       menu.style.left = e.clientX + "px";
       menu.style.top = e.clientY + "px";
@@ -427,14 +429,16 @@ export default {
       // this.meunOne(row);
     },
     fn_repositoryHttp(row) {
-      var repositoryHttp = document.querySelector("#repositoryHttp");
+      // var repositoryHttp = document.querySelector("#repositoryHttp");
+      var repositoryHttp = this.$refs["repositoryHttp"];
       repositoryHttp.onclick = function() {
         serverListBus.$emit("repositoryHttpChild", row.repositoryHttp);
         baseInfo.repository_Url = row.repositoryHttp;
       };
     },
     fn_registerHttp(row) {
-      var registerHttp = document.querySelector("#registerHttp");
+      // var registerHttp = document.querySelector("#registerHttp");
+      var registerHttp = this.$refs["registerHttp"];
       registerHttp.onclick = function() {
         serverListBus.$emit("registerHttpChild", [
           row.registerHttp,
@@ -447,14 +451,16 @@ export default {
       };
     },
     fn_repositoryHttps(row) {
-      var repositoryHttps = document.querySelector("#repositoryHttps");
+      // var repositoryHttps = document.querySelector("#repositoryHttps");
+      var repositoryHttps = this.$refs["repositoryHttps"];
       repositoryHttps.onclick = function() {
         serverListBus.$emit("repositoryHttpsChild", row.repositoryHttps);
         baseInfo.repository_Url = row.repositoryHttps;
       };
     },
     fn_registerHttps(row) {
-      var registerHttps = document.querySelector("#registerHttps");
+      // var registerHttps = document.querySelector("#registerHttps");
+      var repositoryHttps = this.$refs["repositoryHttps"];
       registerHttps.onclick = function() {
         serverListBus.$emit("registerHttpsChild", [
           row.registerHttps,
@@ -466,24 +472,6 @@ export default {
         baseInfo.sourceId = row.sourceId;
       };
     },
-    customMenu(row) {
-      //js自定义菜单功能
-      var sss = document.getElementById("set");
-      sss.oncontextmenu = function(e) {
-        //取消默认的浏览器自带右键 很重要！！
-        e.preventDefault();
-
-        //获取我们自定义的右键菜单
-        var menu = document.querySelector("#menu");
-
-        //根据事件对象中鼠标点击的位置，进行定位
-        menu.style.left = e.clientX + "px";
-        menu.style.top = e.clientY + "px";
-
-        //改变自定义菜单的宽，让它显示出来
-        menu.style.width = "140px";
-      };
-    }
   }
 };
 </script>
