@@ -41,7 +41,11 @@
                 const self = this;
                 self.$refs[formName].validate((valid) => {
                     if (valid) {
-                        self.$router.push('/ProvideDocument');
+                        if(this.ruleForm.username === 'xds'){
+                            self.$router.replace('/provideDocument');
+                        }else{
+                            self.$router.replace('/patientRegister');
+                        }
                     } else {
                         console.log('error submit!!');
                         return false;

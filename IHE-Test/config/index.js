@@ -10,34 +10,44 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      // '/wadoImage':{
-      //   target:'http://192.168.121.66:8080',
+      '/apisXDS':{
+        target:'http://192.168.121.66:8080',
+        changeOrigin: true,
+        pathRewrite: {'^/apisXDS' : ''}
+       },
+       '/apisPIX':{
+        target:'http://192.168.121.66:8082',
+        changeOrigin: true,
+        pathRewrite: {'^/apisPIX' : ''}
+       },
+      // '/source': {
+      //   target: 'http://192.168.121.66:8080',
       //   changeOrigin: true,
-      //     pathRewrite: {
-      //       '^/wadoImage': '/wadoImage'
-      //     }
+      //   pathRewrite: {
+      //     '/source': '/source',
+      //   },
       // },
-      '/source': {
-        target: 'http://192.168.121.66:8080',
-        changeOrigin: true,
-        pathRewrite: {
-          '/source': '/source',
-        },
-      },
-      '/systemConfig': {
-        target: 'http://192.168.121.66:8080',
-        changeOrigin: true,
-        pathRewrite: {
-          '/systemConfig': '/systemConfig',
-        },
-      },
-      '/consumer': {
-        target: 'http://192.168.121.66:8080',
-        changeOrigin: true,
-        pathRewrite: {
-          '/consumer': '/consumer',
-        },
-      },
+      // '/systemConfig': {
+      //   target: 'http://192.168.121.66:8080',
+      //   changeOrigin: true,
+      //   pathRewrite: {
+      //     '/systemConfig': '/systemConfig',
+      //   },
+      // },
+      // '/consumer': {
+      //   target: 'http://192.168.121.66:8080',
+      //   changeOrigin: true,
+      //   pathRewrite: {
+      //     '/consumer': '/consumer',
+      //   },
+      // },
+      // '/client': {
+      //   target: 'http://192.168.121.66:8082',
+      //   changeOrigin: true,
+      //   pathRewrite: {
+      //     '/client': '/client',
+      //   },
+      // },
     },
 
     // Various Dev Server settings

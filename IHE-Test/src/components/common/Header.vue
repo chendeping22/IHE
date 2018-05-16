@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="text-align:center">
     <div class="header-wrap">
       <el-row>
         <el-col :span="5">
@@ -18,7 +18,7 @@
     </div>
     <!-- 通讯参数配置 -->
     <el-collapse v-model="activeNames" id="params">
-      <el-collapse-item title="通讯参数配置" name="1">
+      <el-collapse-item title="通信参数配置" name="1">
         <el-form ref="paramSetform" :model="paramSetform" label-width="100px">
           <el-col :span="8">
             <el-form-item label="文档库" prop="repository_Url" style="text-align:left;">

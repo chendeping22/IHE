@@ -23,7 +23,7 @@ export default new Router({
     },
     {
       path: '*',
-      redirect: '/404'
+      redirect: '/404',
     },
     {
       path: '/provideDocument',
@@ -40,7 +40,7 @@ export default new Router({
           },
           // component: resolve =>
           //   require(['../components/page/ProvideDocument.vue'], resolve),
-          component:() => import('../components/page/ProvideDocument.vue')
+          component: () => import('../components/page/ProvideDocument.vue'),
         },
         {
           path: '/query',
@@ -180,6 +180,71 @@ export default new Router({
           },
           component: resolve =>
             require(['../components/page/log.vue'], resolve),
+        },
+      ],
+    },
+    {
+      path: '/patientRegister',
+      component: resolve =>
+        require(['../PIX_PDQ/common/Header.vue'], resolve),
+      children: [
+        {
+          path: '/',
+          meta: {
+            headerActive: 'patientRegister',
+          },
+          components: {
+            default: () =>
+              import('../PIX_PDQ/page/PatientRegister.vue'),
+            configHeader: () =>
+              import('../PIX_PDQ/common/PatientConfig.vue'),
+          },
+        },
+        {
+          path: '/patientUpdate',
+          meta: {
+            headerActive: 'patientUpdate',
+          },
+          components: {
+            default: () =>
+              import('../PIX_PDQ/page/PatientUpdate.vue'),
+            configHeader: () =>
+              import('../PIX_PDQ/common/PatientConfig.vue'),
+          },
+        },
+        {
+          path: '/patientList',
+          meta: {
+            headerActive: 'patientList',
+          },
+          components: {
+            default: () =>
+              import('../PIX_PDQ/page/PatientList.vue'),
+            configHeader: () =>
+              import('../PIX_PDQ/common/PatientConfig.vue'),
+          },
+        },
+        {
+          path: '/patientVisit',
+          meta: {
+            headerActive: 'patientVisit',
+          },
+          components: {
+            default: () =>
+              import('../PIX_PDQ/page/PatientVisitList.vue'),
+            configHeader: () =>
+              import('../PIX_PDQ/common/PatientConfig.vue'),
+          },
+        },
+        {
+          path: '/clientLog',
+          meta: {
+            headerActive: 'clientLog',
+          },
+          components: {
+            default: () =>
+              import('../PIX_PDQ/page/ClientLog.vue'),
+          },
         },
       ],
     },

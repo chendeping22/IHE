@@ -8,6 +8,7 @@ import App from './App'
 import router from './router'
 import axios from 'axios'
 import apis from './utils/apis'
+import store from './store'
 
 Vue.config.productionTip = false
 
@@ -15,8 +16,11 @@ Vue.prototype.$axios = axios
 Vue.prototype.$apis = apis
 
 Vue.use(ElementUI,{size:'mini'})
+
+
 /* eslint-disable no-new */
 new Vue({
   router,
+  store,
   render: h => h(App)
 }).$mount('#app');

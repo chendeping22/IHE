@@ -9,7 +9,18 @@ function formatDuring(str) {
     oSen = oDate.getSeconds(),
     oTime = oYear + getzf(oMonth) + getzf(oDay) + getzf(oHour) + getzf(oMin) + getzf(oSen); //最后拼接时间
   return oTime;
-};
+}
+
+// 返回类似 20170102 格式的字符串
+function formatDay (year, month, day) {
+  var y = year
+  var m = month
+  if (m < 10) m = '0' + m
+  var d = day
+  if (d < 10) d = '0' + d
+  return y + m + d
+}
+
 //补零操作
 function getzf(num) {
   if (parseInt(num) < 10) {
@@ -53,5 +64,6 @@ export {
   baseInfo,
   showLog,
   formatDuring,
-  pathReset
+  pathReset,
+  formatDay
 }
