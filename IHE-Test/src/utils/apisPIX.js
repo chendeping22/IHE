@@ -16,10 +16,18 @@ class Apis {
     };
     this.ServiceConfig = {
       queryAll: this.get.bind(this, `${baseUrl}/serviceConfig/queryAll`),
+      insert: this.post.bind(this, `${baseUrl}/serviceConfig/insert`),
+      delete: this.post.bind(this, `${baseUrl}/serviceConfig/delete`),
+      
     };
     this.Organization = {
-      getAll: this.get.bind(this, `${baseUrl}/organization/getAll`)
-    }
+      getAll: this.get.bind(this, `${baseUrl}/organization/getAll`),
+      add: this.post.bind(this, `${baseUrl}/organization/add`)
+    };
+    this.match = {
+      query: this.get.bind(this, `${baseUrl}/match/query`),
+      update: this.post.bind(this, `${baseUrl}/match/update`)
+    };
     this.BasicInfo = {
       localSearchPatInfo:this.get.bind(this, `${baseUrl}/basicInfo/localSearchPatInfo`),
       localUpdate:this.post.bind(this, `${baseUrl}/basicInfo/localUpdate`),
