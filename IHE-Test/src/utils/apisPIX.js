@@ -10,22 +10,30 @@ class Apis {
     this.Client = {
       savePatLocal: this.post.bind(this, `${baseUrl}/client/savePatLocal`),
       queryPatInfo: this.get.bind(this, `${baseUrl}/client/queryPatInfo`),
-      patIntoHospital: this.post.bind( this,`${baseUrl}/client/patIntoHospital`),
+      patIntoHospital: this.post.bind(this, `${baseUrl}/client/patIntoHospital`),
       patRegister: this.post.bind(this, `${baseUrl}/client/patRegister`),
       orderSubmit: this.post.bind(this, `${baseUrl}/client/orderSubmit`),
     };
     this.ServiceConfig = {
       queryAll: this.get.bind(this, `${baseUrl}/serviceConfig/queryAll`),
+      insert: this.post.bind(this, `${baseUrl}/serviceConfig/insert`),
+      delete: this.post.bind(this, `${baseUrl}/serviceConfig/delete`),
+
     };
     this.Organization = {
-      getAll: this.get.bind(this, `${baseUrl}/organization/getAll`)
-    }
+      getAll: this.get.bind(this, `${baseUrl}/organization/getAll`),
+      add: this.post.bind(this, `${baseUrl}/organization/add`)
+    };
+    this.match = {
+      query: this.get.bind(this, `${baseUrl}/match/query`),
+      update: this.post.bind(this, `${baseUrl}/match/update`)
+    };
     this.BasicInfo = {
-      localSearchPatInfo:this.get.bind(this, `${baseUrl}/basicInfo/localSearchPatInfo`),
-      localUpdate:this.post.bind(this, `${baseUrl}/basicInfo/localUpdate`),
-      submitUpdate:this.post.bind(this, `${baseUrl}/basicInfo/submitUpdate`),
-      localCombine:this.post.bind(this, `${baseUrl}/basicInfo/localCombine`),
-      submitCombine:this.post.bind(this, `${baseUrl}/basicInfo/submitCombine`),
+      localSearchPatInfo: this.get.bind(this, `${baseUrl}/basicInfo/localSearchPatInfo`),
+      localUpdate: this.post.bind(this, `${baseUrl}/basicInfo/localUpdate`),
+      submitUpdate: this.post.bind(this, `${baseUrl}/basicInfo/submitUpdate`),
+      localCombine: this.post.bind(this, `${baseUrl}/basicInfo/localCombine`),
+      submitCombine: this.post.bind(this, `${baseUrl}/basicInfo/submitCombine`),
       getIdList: this.post.bind(this, `${baseUrl}/basicInfo/getIdList`),
       getPatientinfo: this.get.bind(this, `${baseUrl}/basicInfo/getPatientinfo`)
     }
@@ -39,16 +47,16 @@ class Apis {
         })
         .then(
           response => {
-            store.commit('setLogs',response)
+            store.commit('setLogs', response)
             resolve(response);
           },
           err => {
-            store.commit('setLogs',err)
+            store.commit('setLogs', err)
             reject(err);
           },
         )
         .catch(err => {
-          store.commit('setLogs',err)
+          store.commit('setLogs', err)
           reject(err);
         });
     });
@@ -80,16 +88,16 @@ class Apis {
         .post(url, params)
         .then(
           response => {
-            store.commit('setLogs',response)
+            store.commit('setLogs', response)
             resolve(response);
           },
           err => {
-            store.commit('setLogs',err)
+            store.commit('setLogs', err)
             reject(err);
           },
         )
         .catch(err => {
-          store.commit('setLogs',err)
+          store.commit('setLogs', err)
           reject(err);
         });
     });

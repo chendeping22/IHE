@@ -246,6 +246,36 @@ export default new Router({
               import('../PIX_PDQ/page/ClientLog.vue'),
           },
         },
+        {
+          path: '/serviceconfig',
+          meta: {
+            headerActive: 'serviceconfig',
+          },
+          components: {
+            default: () =>
+              import('../PIX_PDQ/page/serviceConfig.vue'),
+          },
+        },
+        {
+          path: '/organizationadd',
+          meta: {
+            headerActive: 'organizationadd',
+          },
+          components: {
+            default: () =>
+              import('../PIX_PDQ/page/organizationAdd.vue'),
+          },
+        },
+        {
+          path: '/match',
+          meta: {
+            headerActive: 'match',
+          },
+          components: {
+            default: () =>
+              import('../PIX_PDQ/page/match.vue'),
+          },
+        },
       ],
     },
   ],

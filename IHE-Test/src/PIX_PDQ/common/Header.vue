@@ -44,10 +44,23 @@ export default {
           index: "patientVisit",
           title: "病人就诊信息查询"
         },
+        
+        {
+          index: "serviceConfig",
+          title: "服务配置添加"
+        },
+        {
+          index: "organizationAdd",
+          title: "添加机构"
+        },
+        {
+          index: "match",
+          title: "查询匹配"
+        },
         {
           index: "clientLog",
           title: "通信日志"
-        }
+        },
       ],
     };
   },
@@ -87,6 +100,7 @@ export default {
   background-color: #457bc7;
   width: 100%;
   padding-left: 50px;
+  min-width: 1240px;
 }
 .el-menu--horizontal > .el-menu-item.is-active,
 .el-menu--horizontal > .el-submenu.is-active .el-submenu__title {
