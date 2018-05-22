@@ -70,16 +70,16 @@ const mutations = {
     state.organizations = organizations;
   },
   setPixAdminIp(state, pixAdminIp) {
-    state.pixAdminIp = pixAdminIp;
+    state.pixAdminIp = pixAdminIp.trim();
   },
   setPixAdminPort(state, pixAdminPort) {
-    state.pixAdminPort = pixAdminPort;
+    state.pixAdminPort = pixAdminPort.trim();
   },
   setReceiveApp(state, receiveApp) {
-    state.receiveApp = receiveApp;
+    state.receiveApp = receiveApp.trim();
   },
   setReceiveFacility(state, receiveFacility) {
-    state.receiveFacility = receiveFacility;
+    state.receiveFacility = receiveFacility.trim();
   },
 };
 

@@ -26,6 +26,8 @@ class Apis {
       submitUpdate:this.post.bind(this, `${baseUrl}/basicInfo/submitUpdate`),
       localCombine:this.post.bind(this, `${baseUrl}/basicInfo/localCombine`),
       submitCombine:this.post.bind(this, `${baseUrl}/basicInfo/submitCombine`),
+      getIdList: this.post.bind(this, `${baseUrl}/basicInfo/getIdList`),
+      getPatientinfo: this.get.bind(this, `${baseUrl}/basicInfo/getPatientinfo`)
     }
   }
 

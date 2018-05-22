@@ -395,6 +395,7 @@
 import { showLog, formatDay } from '../../utils/common';
 import Apis from '../../utils/apisPIX';
 import { mapGetters } from 'vuex';
+import { configBus } from '../../utils/bus.js';
 export default {
   data() {
     let date = new Date();
@@ -569,6 +570,16 @@ export default {
       }
 
       this.$refs[formName].validate(valid => {
+        if (
+            this.serviceConfig.pixAdminIp === '' ||
+            this.serviceConfig.pixAdminPort === '' ||
+            this.serviceConfig.receiveApp === '' ||
+            this.serviceConfig.receiveFacility === ''
+          ) {
+            configBus.$emit('paramSetform');
+            return;
+        }
+        
         if (valid) {
           let params = {};
           let serviceConfig = this.serviceConfig;
@@ -616,6 +627,16 @@ export default {
     submitCombine(formName) {
       //提交合并患者信息到服务端
       this.$refs[formName].validate(valid => {
+        if (
+            this.serviceConfig.pixAdminIp === '' ||
+            this.serviceConfig.pixAdminPort === '' ||
+            this.serviceConfig.receiveApp === '' ||
+            this.serviceConfig.receiveFacility === ''
+          ) {
+            configBus.$emit('paramSetform');
+            return;
+        }
+
         if (valid) {
           let params = {};
           let serviceConfig = this.serviceConfig;
@@ -636,17 +657,6 @@ export default {
             });
         }
       });
-    },
-    setLog(res) {
-      //把返回的数据存储在showLog对象中
-      showLog.config.data = res.config.data;
-      showLog.config.headers = res.config.headers;
-      showLog.config.method = res.config.method;
-      showLog.data.date = res.data.date;
-      showLog.headers = res.headers;
-      showLog.request.responseURL = res.request.responseURL;
-      showLog.status = res.status;
-      showLog.statusText = res.statusText;
     },
   },
 };

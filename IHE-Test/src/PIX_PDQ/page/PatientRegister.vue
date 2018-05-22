@@ -469,6 +469,7 @@
 import { showLog, formatDay } from '../../utils/common';
 import { mapGetters } from 'vuex';
 import Apis from '../../utils/apisPIX';
+import { configBus } from '../../utils/bus.js';
 export default {
   data() {
     let date = new Date();
@@ -622,6 +623,16 @@ export default {
     patIntoHospital(formName) {
       //病人入院
       this.$refs[formName].validate(valid => {
+        if (
+            this.serviceConfig.pixAdminIp === '' ||
+            this.serviceConfig.pixAdminPort === '' ||
+            this.serviceConfig.receiveApp === '' ||
+            this.serviceConfig.receiveFacility === ''
+          ) {
+            configBus.$emit('paramSetform');
+            return;
+        }
+
         if (valid) {
           console.log(this.serviceConfig);
           console.log(this.patientIdForm.patientId);
@@ -649,6 +660,16 @@ export default {
     patRegister(formName) {
       //病人注册
       this.$refs[formName].validate(valid => {
+        if (
+            this.serviceConfig.pixAdminIp === '' ||
+            this.serviceConfig.pixAdminPort === '' ||
+            this.serviceConfig.receiveApp === '' ||
+            this.serviceConfig.receiveFacility === ''
+          ) {
+            configBus.$emit('paramSetform');
+            return;
+        }
+
         if (valid) {
           console.log(this.serviceConfig);
           console.log(this.patientIdForm.patientId);
@@ -674,7 +695,18 @@ export default {
       });
     },
     orderSubmit(formName) {
+      // 提交预约
       this.$refs[formName].validate(valid => {
+        if (
+            this.serviceConfig.pixAdminIp === '' ||
+            this.serviceConfig.pixAdminPort === '' ||
+            this.serviceConfig.receiveApp === '' ||
+            this.serviceConfig.receiveFacility === ''
+          ) {
+            configBus.$emit('paramSetform');
+            return;
+        }
+        
         if (valid) {
           console.log(this.serviceConfig);
           console.log(this.patientIdForm.patientId);

@@ -87,6 +87,10 @@
           <el-table :data="tableData"
                     height="200"
                     border
+                    ref="singleTable"
+                    header-row-class-name="header-row"
+                    highlight-current-row
+                    @current-change="handleCurrentChange"
                     style="width: 100%">
             <el-table-column prop="patientId"
                              width="180"
@@ -110,7 +114,8 @@
             </el-table-column>
             <el-table-column prop="birthDateTime"
                              width="160"
-                             label="出生日期">
+                             label="出生日期"
+                             :formatter="birthDateFormatter">
             </el-table-column>
             <el-table-column prop="namespaceId"
                              label="机构名">
@@ -132,6 +137,8 @@
              :model="submitForm"
              :rules="submitRules"
              label-width="100px"
+             status-icon
+             :show-message='false'
              style="padding-top:0 20px">
       <el-row>
         <el-card class="box-card">
@@ -154,7 +161,22 @@
                   <el-select v-model="submitForm.namespaceId"
                              placeholder="请选择">
                     <el-option label=""
-                               value="">
+                               :value="-1"
+                               :disabled="true">
+                      <span class="pix-th-color">ID</span>
+                      <span class="pix-margin pix-th-color">namespaceId</span>
+                      <span class="pix-right pix-th-color">oidType</span>
+                      <span class="pix-right pix-th-color">universal</span>
+                    </el-option>
+                    <el-option v-for=" item in organizations"
+                               :key="item.id"
+                               :label="item.namespaceId"
+                               :value="item.namespaceId"
+                               @click.native="namespaceChange(item)">
+                      <span>{{ item.id }}</span>
+                      <span class="pix-margin">{{ item.namespaceId }}</span>
+                      <span class="pix-right">{{ item.oidType }}</span>
+                      <span class="pix-right">{{ item.universal }}</span>
                     </el-option>
                   </el-select>
                 </el-form-item>
@@ -163,12 +185,8 @@
                 <el-form-item label=""
                               label-width="10px"
                               prop="universalId">
-                  <el-select v-model="submitForm.universalId"
-                             placeholder="请选择">
-                    <el-option label=""
-                               value="">
-                    </el-option>
-                  </el-select>
+                  <el-input v-model="submitForm.universalId">
+                  </el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="4">
@@ -182,19 +200,19 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label-width="16px">
-              <el-button type="primary"
+              <!-- <el-button type="primary"
                          style="width:120px;"
-                         @click="SendDocument('submitForm')">本地查询</el-button>
+                         @click="SendDocument('submitForm')">本地查询</el-button> -->
               <el-button type="primary"
                          style="width:120px;margin-left:16px;"
-                         @click="SendDocument('submitForm')">向PIX管理器查询</el-button>
+                         @click="getIDList('submitForm')">向PIX管理器查询</el-button>
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="12">
             <el-form-item label="更多限制使用HL7字段"
                           label-width="160px"
-                          prop="namespaceIds">
-              <el-input v-model="submitForm.namespaceIds">
+                          prop="limitHL7">
+              <el-input v-model="submitForm.limitHL7">
               </el-input>
             </el-form-item>
           </el-col>
@@ -202,17 +220,17 @@
                     height="200"
                     border
                     style="width: 100%">
-            <el-table-column prop=""
+            <el-table-column prop="patientId"
                              width="180"
                              label="病人ID">
             </el-table-column>
-            <el-table-column prop=""
+            <el-table-column prop="namespaceId"
                              label="机构名">
             </el-table-column>
-            <el-table-column prop=""
+            <el-table-column prop="universalId"
                              label="机构ID">
             </el-table-column>
-            <el-table-column prop=""
+            <el-table-column prop="oidType"
                              label="类型">
             </el-table-column>
           </el-table>
@@ -222,12 +240,16 @@
   </div>
 </template>
 <script>
-import { showLog, baseInfo, pathReset } from '../../utils/common';
+import { formatDay } from '../../utils/common';
+import Apis from '../../utils/apisPIX';
+import { mapGetters } from 'vuex';
+import { configBus } from '../../utils/bus.js';
 export default {
   data() {
     return {
       loading: false,
       tableData: [],
+      currentRow: null,
       searchForm: {
         patientId: '', //病人ID（所有必填）
         patFamilyName: '', //姓名
@@ -243,216 +265,143 @@ export default {
         namespaceId: '',
         universalId: '',
         oidType: '',
-        namespaceIds:''
+        limitHL7: '',
       },
-      fileBlob: '',
-      submitRules: {},
-      // submitRules: {
-      //   patientId: [
-      //     {
-      //       required: true,
-      //       message: "请输入patientId",
-      //       tigger: "blur"
-      //     }
-      //   ],
-      //   existDocId: [
-      //     {
-      //       required: true,
-      //       message: "请输入existDocId",
-      //       tigger: "blur"
-      //     }
-      //   ],
-      //   submissionSetUniqueId: [
-      //     {
-      //       required: true,
-      //       message: "请输入submissionSetUniqueId",
-      //       tigger: "blur"
-      //     }
-      //   ],
-      //   submissionSetSourceId: [
-      //     {
-      //       required: true,
-      //       message: "请输入submissionSetSourceId",
-      //       tigger: "blur"
-      //     }
-      //   ],
-      //   extrinsicUniqueId: [
-      //     {
-      //       required: true,
-      //       message: "请输入extrinsicUniqueId",
-      //       tigger: "blur"
-      //     }
-      //   ],
-      //   extrinsicAssociate: [
-      //     {
-      //       required: true,
-      //       message: "extrinsicAssociate",
-      //       tigger: "blur"
-      //     }
-      //   ],
-      //   extrinsicFileName: [
-      //     {
-      //       required: true,
-      //       message: "请输入extrinsicFileName",
-      //       tigger: "blur"
-      //     }
-      //   ],
-      //   folderId: [
-      //     {
-      //       required: true,
-      //       message: "参数FolderId和ExistFolderId二选一",
-      //       tigger: "blur"
-      //     }
-      //   ],
-      //   existFolderId: [
-      //     {
-      //       required: true,
-      //       message: "参数FolderId和ExistFolderId二选一",
-      //       tigger: "blur"
-      //     }
-      //   ]
-      // },
+      submitRules: {
+        patientId: [
+          {
+            required: true,
+            message: '请输入patientId',
+            tigger: 'blur',
+          },
+        ],
+        namespaceId: [
+          {
+            required: true,
+            message: '请输入namespaceId',
+            tigger: 'blur',
+          },
+        ],
+        universalId: [
+          {
+            required: true,
+            message: '请输入universalId',
+            tigger: 'blur',
+          },
+        ],
+        oidType: [
+          {
+            required: true,
+            message: '请输入oidType',
+            tigger: 'blur',
+          },
+        ],
+      },
     };
   },
-  created() {
-    //将baseInfo的值传入表单
-    this.submitForm.repository_Url = baseInfo.repository_Url;
-    this.submitForm.patientId = baseInfo.patientId;
+  computed: {
+    ...mapGetters(['serviceConfig', 'organizations']),
   },
   methods: {
-    SendDocument(formName) {
-      //提交文档
-      const self = this;
-      this.submitForm.fileName = pathReset(this.submitForm.fileName); //将正斜杠/替换成反斜杠\
-      this.submitForm.repository_Url = baseInfo.repository_Url; //手写配置参数更新表单数据
-      this.submitForm.patientId = baseInfo.patientId;
-      self.$refs[formName].validate(valid => {
+    birthDateFormatter(row, column) {
+      let date = new Date(row.birthDateTime);
+      return formatDay(date.getFullYear(), date.getMonth() + 1, date.getDate());
+    },
+    handleCurrentChange(val) {
+      this.currentRow = val;
+      for (let item in this.submitForm) {
+        this.submitForm[item] = this.currentRow[item]
+          ? this.currentRow[item]
+          : '';
+      }
+    },
+    namespaceChange(item) {
+      this.submitForm.oidType = item.oidType;
+      this.submitForm.universalId = item.universal;
+    },
+    localSearchPatInfo(formName) {
+      //根据查询条件本地检索患者信息
+      this.$refs[formName].validate(valid => {
         if (valid) {
-          if (this.submitForm.associate === '') {
-            //到文档操作值为空时，调用提交文档接口
-            //let url = "http://192.168.121.66:8080/source/sendDoc";
-            let url = self.$apis.source.sendDoc;
-            let params = JSON.parse(JSON.stringify(this.submitForm)); //拷贝一份参数
-            //移除整个表单内本接口不需要提交的字段
-            params.existed_Uuid = undefined;
-            params.associate = undefined;
-            params.existedDocId = undefined;
-            console.log(params);
-            self.$axios.post(url, params).then(res => {
-              console.log(res);
-              this.setLog(res); //把返回的数据存储在showLog对象中
-              if (res.data === 'success') {
-                console.log(res.status);
-                this.$message({
-                  message: res.data,
-                  type: 'success',
-                });
-              } else {
-                this.$message.error('提交失败！');
-              }
-            });
-          } else {
-            //当文档操作值不为空时，调用文档操作的接口
-            //let url = "http://192.168.121.66:8080/source/sendDoc";
-            //console.log(url);
-            let url = self.$apis.source.sendDoc;
-            let params = JSON.parse(JSON.stringify(this.submitForm));
-            //delete params.existed_Uuid;
-            console.log(params);
-            //console.log("文件操作");
-            self.$axios.post(url, params).then(res => {
-              console.log(res);
-              this.setLog(res); //把返回的数据存储在showLog对象中
-              if (res.data === 'success') {
-                console.log(res.status);
-                this.$message({
-                  message: res.data,
-                  type: 'success',
-                });
-              } else {
-                this.$message.error('提交失败！');
-              }
-            });
+          let params = {};
+          for (let item in this.searchForm) {
+            params[item] = this.searchForm[item]
+              ? this.searchForm[item]
+              : undefined;
           }
-        }
-      });
-    },
-    SendFolder(formName) {
-      //提交文件夹
-      const self = this;
-      this.submitForm.repository_Url = baseInfo.repository_Url;
-      this.submitForm.patientId = baseInfo.patientId;
-      self.$refs[formName].validate(valid => {
-        if (valid) {
-          //let url = "http://192.168.121.66:8080/source/sendFolder";
-          let url = self.$apis.source.sendFolder;
-          let params = JSON.parse(JSON.stringify(self.submitForm));
-          params.existed_Uuid = undefined;
-          params.associate = undefined;
-          params.existedDocId = undefined;
-          params.fileName = undefined;
-          params.extrinsic_Author_Person = undefined;
-          params.extrinsicConfidentialityCode = undefined;
-          params.extrinsic_Author_Institution = undefined;
-          params.extrinsic_Author_Role = undefined;
-          params.extrinsic_Author_Specialty = undefined;
-          console.log(params);
-          self.$axios.post(url, params).then(res => {
-            console.log(res);
-            this.setLog(res); //把返回的数据存储在showLog对象中
-            if (res.data === 'success') {
-              console.log(res.status);
-              this.$message({
-                message: res.data,
-                type: 'success',
-              });
-            } else {
-              this.$message.error('提交失败！');
-            }
-          });
-        }
-      });
-    },
-    SendFolderDocument(formName) {
-      //往文件夹里提交文档
-      const self = this;
-      this.submitForm.repository_Url = baseInfo.repository_Url;
-      this.submitForm.patientId = baseInfo.patientId;
 
-      self.$refs[formName].validate(valid => {
-        if (valid) {
-          console.log(url);
-          let url = self.$apis.source.sendDocToFolder;
-          let params = JSON.parse(JSON.stringify(this.submitForm));
-          params.associate = undefined;
-          params.existedDocId = undefined;
-          console.log(params);
-          self.$axios.post(url, params).then(res => {
-            console.log(res);
-            this.setLog(res); //把返回的数据存储在showLog对象中
-            if (res.data === 'success') {
-              console.log(res.status);
-              this.$message({
-                message: res.data,
-                type: 'success',
-              });
-            } else {
-              this.$message.error(res.data);
-            }
-          });
+          this.currentRow = null;
+          Apis.BasicInfo.localSearchPatInfo(params)
+            .then(res => {
+              console.log(res);
+              if (res.status === 200) {
+                this.$message({
+                  message: res.data.info,
+                  type: 'success',
+                });
+                if (typeof res.data.data !== undefined) {
+                  this.tableData = res.data.data;
+                } else {
+                  this.tableData = [];
+                }
+              }
+            })
+            .catch(err => {
+              console.log(err);
+              this.$message.error(err.message);
+            });
         }
       });
     },
-    setLog(res) {
-      //把返回的数据存储在showLog对象中
-      showLog.config.data = res.config.data;
-      showLog.config.headers = res.config.headers;
-      showLog.config.method = res.config.method;
-      showLog.data.date = res.data.date;
-      showLog.headers = res.headers;
-      showLog.request.responseURL = res.request.responseURL;
-      showLog.status = res.status;
-      showLog.statusText = res.statusText;
+    getIDList(formName) {
+      // this.$refs['paramSetform'].validate(valid =>{
+      //   if(valid){
+      //     console.log(valid);
+      //   }else{
+      //     console.log(valid);
+      //   }
+      // });
+
+      this.$refs[formName].validate(valid => {
+        if (
+            this.serviceConfig.pixAdminIp === '' ||
+            this.serviceConfig.pixAdminPort === '' ||
+            this.serviceConfig.receiveApp === '' ||
+            this.serviceConfig.receiveFacility === ''
+          ) {
+            configBus.$emit('paramSetform');
+            return;
+        }
+
+        if (valid) {
+          let params = { ...this.serviceConfig };
+          for (let item in this.submitForm) {
+            params[item] = this.submitForm[item]
+              ? this.submitForm[item]
+              : undefined;
+          }
+
+          Apis.BasicInfo.getIdList(params)
+            .then(res => {
+              console.log(res);
+              if (res.status === 200) {
+                this.$message({
+                  message: res.data.info,
+                  type: 'success',
+                });
+                if (typeof res.data.data !== undefined) {
+                  this.tablePIXData = res.data.data;
+                } else {
+                  this.tablePIXData = [];
+                }
+              }
+            })
+            .catch(err => {
+              console.log(err);
+              this.$message.error(err.message);
+            });
+        }
+      });
     },
   },
 };

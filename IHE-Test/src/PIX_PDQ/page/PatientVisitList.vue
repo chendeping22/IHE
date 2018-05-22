@@ -209,8 +209,8 @@
             <el-col :span="14">
               <el-form-item label="更多限制使用HL7字段"
                             label-width="160px"
-                            prop="namespaceIds">
-                <el-input v-model="submitForm.namespaceIds">
+                            prop="limtHL7">
+                <el-input v-model="submitForm.limtHL7">
                 </el-input>
               </el-form-item>
             </el-col>
@@ -219,8 +219,8 @@
             <el-col :span="6">
               <el-form-item label="一次最多返回记录数"
                             label-width="160px"
-                            prop="namespaceIds">
-                <el-input v-model="submitForm.namespaceIds">
+                            prop="backCount">
+                <el-input v-model="submitForm.backCount">
                 </el-input>
               </el-form-item>
             </el-col>
@@ -228,13 +228,18 @@
                     :offset="1">
               <el-button type="primary"
                          style="width:140px;"
-                         @click="patientRegister('submitForm')">基本查询</el-button>
+                         @click="baseInfoSearch('submitForm')">基本查询</el-button>
               <el-button type="primary"
                          style="width:140px;margin-left:8px;"
-                         @click="resetRegister('submitForm')">查询余下记录</el-button>
-              <el-button type="primary"
+                         :disabled = "!baseInfoTag"
+                         @click="residueSearch('submitForm')">查询余下记录</el-button>
+              <!-- <el-button type="primary"
                          style="width:140px;margin-left:8px;"
-                         @click="resetRegister('submitForm')">取消查询余下记录</el-button>
+                         @click="resetRegister('submitForm')">取消查询余下记录</el-button> -->
+                          <!-- <el-form-item prop="PDSTLS"
+                          label-width="20px"> -->
+              <el-checkbox   style="margin-left:16px;" v-model="baseInfoTag"></el-checkbox>
+            <!-- </el-form-item> -->
             </el-col>
           </el-row>
         </el-card>
@@ -409,90 +414,18 @@
                   :offset="1">
             <el-button type="primary"
                        style="width:140px;"
-                       @click="patientRegister('submitForm')">就诊查询</el-button>
+                       >就诊查询</el-button>
             <el-button type="primary"
                        style="width:140px;margin-left:8px;"
-                       @click="resetRegister('submitForm')">查询余下记录</el-button>
-            <el-button type="primary"
+                       :disabled="!visitTag"
+                       >查询余下记录</el-button>
+            <!-- <el-button type="primary"
                        style="width:140px;margin-left:8px;"
-                       @click="resetRegister('submitForm')">取消查询余下记录</el-button>
+                       @click="resetRegister('submitForm')">取消查询余下记录</el-button> -->
+             <el-checkbox   style="margin-left:16px;" v-model="visitTag"></el-checkbox>
           </el-col>
         </el-card>
       </el-row>
-      <!-- <el-row>
-        <el-card class="box-card">
-          <div slot="header"
-               class="clearfix">
-            <span>儿科基本信息</span>
-          </div>
-          <el-col :span="6">
-            <el-form-item label="母亲婚前姓名 姓"
-                          label-width="120px"
-                          prop="patient.motherMaidenFname">
-              <el-input v-model="submitForm.patient.motherMaidenFname"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="名"
-                          prop="patient.motherMaidenGname">
-              <el-input v-model="submitForm.patient.motherMaidenGname"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="简写"
-                          prop="patient.motherMaidenNinitial">
-              <el-input v-model="submitForm.patient.motherMaidenNinitial"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="家庭电话"
-                          prop="patient.homeTelNum">
-              <el-input v-model="submitForm.patient.homeTelNum"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="出生标示"
-                          label-width="120px"
-                          prop="patient.multiBirthIndicator">
-              <el-input v-model="submitForm.patient.multiBirthIndicator"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="出生次序"
-                          prop="patient.birthOrder">
-              <el-input v-model="submitForm.patient.birthOrder"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="上次就诊时间"
-                          prop="patient.lastUpdtDate">
-              <el-date-picker v-model="submitForm.patient.lastUpdtDate"
-                              type="date"
-                              placeholder="选择日期"
-                              format="yyyyMMdd"
-                              value-format="yyyyMMdd">
-              </el-date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="上次就诊设施"
-                          prop="patient.lastUpdtFacility">
-              <el-input v-model="submitForm.patient.lastUpdtFacility"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-card>
-      </el-row> -->
-      <!-- <el-row>
-        <el-col :span="24"
-                style="padding:20px;text-align:center;">
-          <el-button type="primary"
-                     style="width:140px;"
-                     @click="patientRegister('submitForm')">登记入本地数据库</el-button>
-          <el-button type="primary"
-                     style="width:80px;margin-left:8px;"
-                     @click="resetRegister('submitForm')">清空</el-button>
-        </el-col>
-      </el-row> -->
       <el-row>
         <el-card class="box-card">
           <div slot="header"
@@ -544,76 +477,33 @@
         </el-card>
       </el-row>
     </el-form>
-
-    <!-- <el-form ref="patientIdForm"
-             :model="patientIdForm"
-             :rules="patientIdRules"
-             label-width="100px"
-             :status-icon='true'
-             style="padding:0 20px 20px 20px;">
-      <el-row>
-        <el-col :span="6">
-          <el-form-item label="病人ID号"
-                        prop="patientId">
-            <el-input v-model="patientIdForm.patientId">
-            </el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="16"
-                :offset="1">
-          <el-button type="primary"
-                     style="width:120px;"
-                     @click="queryPatInfo('patientIdForm')">查询病人信息</el-button>
-          <el-button type="primary"
-                     style="width:120px;"
-                     @click="patIntoHospital('patientIdForm')">病人入院</el-button>
-          <el-button type="primary"
-                     style="width:120px;"
-                     @click="patRegister('patientIdForm')">病人注册</el-button>
-          <el-button type="primary"
-                     style="width:120px;"
-                     @click="orderSubmit('patientIdForm')">提交预约</el-button>
-          <el-button type="primary"
-                     style="width:120px;"
-                     @click="SendFolder('submitForm')">儿科病人入院</el-button>
-        </el-col>
-      </el-row>
-    </el-form> -->
   </div>
 </template>
 <script>
-import { showLog, baseInfo, pathReset, formatDay } from '../../utils/common';
+import { formatDay } from '../../utils/common';
 import { mapGetters } from 'vuex';
 import Apis from '../../utils/apisPIX';
+import { configBus } from '../../utils/bus.js';
 export default {
   data() {
     let date = new Date();
     return {
       loading: false,
       tableData: [],
-      organizations: [],
-      patientIdForm: {
-        patientId: '',
-      },
+      baseInfoTag:true,
+      visitTag:true,
       submitForm: {
+        backCount:'',
+        limtHL7:'',
+        residueCount:'0',
         patient: {
-          patientId: '1222',
-          namespaceId: 'LWClient',
-          universalId: '',
-          oidType: '',
-          patFamilyName: 'EWE',
-          patGivenName: 'dsd',
-          patNameInitials: 'sds',
+          patientId: '',
+          patFamilyName: '',
+          patGivenName: '',
+          patNameInitials: '',
           sex: '',
-          birthDateTime: formatDay(
-            date.getFullYear(),
-            date.getMonth() + 1,
-            date.getDate(),
-          ),
-          bizTelNum: '',
+          birthDateTime: '',
           patAccountNum: '',
-          ssnNum: '',
-          driverLicenseNum: '',
           streetAdd: '',
           city: '',
           province: '',
@@ -622,18 +512,14 @@ export default {
           motherMaidenGname: '',
           motherMaidenNinitial: '',
           homeTelNum: '',
-          multiBirthIndicator: '',
-          birthOrder: '',
-          lastUpdtDate: formatDay(
-            date.getFullYear(),
-            date.getMonth() + 1,
-            date.getDate(),
-          ),
-          lastUpdtFacility: '',
+          ssnNum: '',
+          namespaceId: '',
+          universalId: '',
+          oidType: '',
         },
         visitInfo: {
-          patClass: 'DSASDAS',
-          asgndPointOfCare: 'DSDSDSDS',
+          patClass: '',
+          asgndPointOfCare: '',
           asgndRoom: '',
           asgndBed: '',
           asgndBuild: '',
@@ -653,44 +539,23 @@ export default {
           hospService: '',
         },
       },
-      patientIdRules: {
-        patientId: [
-          {
-            required: true,
-            message: '请输入病人ID号',
-            tigger: 'blur',
-          },
-        ],
-      },
       submitRules: {
-        'patient.patientId': [
-          {
-            required: true,
-            message: '请输入patientId',
-            tigger: 'blur',
-          },
-        ],
+        // 'patient.patientId': [
+        //   {
+        //     required: true,
+        //     message: '请输入patientId',
+        //     tigger: 'blur',
+        //   },
+        // ],
       },
     };
   },
   computed: {
-    ...mapGetters(['serviceConfig']),
+    ...mapGetters(['serviceConfig','organizations']),
   },
   created() {
-    this.getOrganizationAll();
   },
   methods: {
-    getOrganizationAll() {
-      Apis.Organization.getAll()
-        .then(res => {
-          if (res.status === 200) {
-            this.organizations = res.data;
-          }
-        })
-        .catch(err => {
-          this.$message.error(err.message);
-        });
-    },
     namespaceChange(item) {
       this.submitForm.patient.oidType = item.oidType;
       this.submitForm.patient.universalId = item.universal;
@@ -699,15 +564,36 @@ export default {
       this.submitForm.visitInfo.visitOid = item.universal;
       this.submitForm.visitInfo.visitOidType = item.oidType;
     },
-    patientRegister(formName) {
-      //登入本地数据库
+    baseInfoSearch(formName) {
       this.$refs[formName].validate(valid => {
-        if (valid) {
-          let params = {};
-          params.patient = this.submitForm.patient;
-          params.visitInfo = this.submitForm.visitInfo;
+        if (
+            this.serviceConfig.pixAdminIp === '' ||
+            this.serviceConfig.pixAdminPort === '' ||
+            this.serviceConfig.receiveApp === '' ||
+            this.serviceConfig.receiveFacility === ''
+          ) {
+            configBus.$emit('paramSetform');
+            return;
+        }
 
-          Apis.Client.savePatLocal(params)
+        if (valid) {
+          let params = {},
+              backCount = this.submitForm.backCount,
+              limtHL7  = this.submitForm.limtHL7;
+          let patient = this.submitForm.patient
+          for (let item in patient) {
+            patient[item] = patient[item]
+              ? patient[item]
+              : undefined;
+          }
+
+
+          params.patient = patient;
+          params.connectionInfo = { ...this.serviceConfig }
+          params.connectionInfo.backCount = backCount?backCount:undefined;
+          params.connectionInfo.limtHL7 = limtHL7?limtHL7:undefined;
+
+          Apis.BasicInfo.getPatientinfo(params)
             .then(res => {
               console.log(res);
               if (res.status === 200) {
@@ -715,6 +601,56 @@ export default {
                   message: res.data.info,
                   type: 'success',
                 });
+                 this.tableData = res.data.data;
+              }
+              
+            })
+            .catch(err => {
+              console.log(err);
+              this.$message.error(err.message);
+            });
+        }
+      });
+    },
+    residueSearch(formName){
+       this.$refs[formName].validate(valid => {
+         if (
+            this.serviceConfig.pixAdminIp === '' ||
+            this.serviceConfig.pixAdminPort === '' ||
+            this.serviceConfig.receiveApp === '' ||
+            this.serviceConfig.receiveFacility === ''
+          ) {
+            configBus.$emit('paramSetform');
+            return;
+        }
+
+        if (valid) {
+          let params = {},
+              backCount = this.submitForm.backCount,
+              limtHL7  = this.submitForm.limtHL7,
+              residueCount = this.submitForm.residueCount;
+          let patient = this.submitForm.patient
+          for (let item in patient) {
+            patient[item] = patient[item]
+              ? patient[item]
+              : undefined;
+          }
+
+          params.patient = patient;
+          params.connectionInfo = { ...this.serviceConfig }
+          params.connectionInfo.backCount = backCount?backCount:undefined;
+          params.connectionInfo.limtHL7 = limtHL7?limtHL7:undefined;
+          params.connectionInfo.residueCount = residueCount?residueCount:undefined;
+
+          Apis.BasicInfo.getPatientinfo(params)
+            .then(res => {
+              console.log(res);
+              if (res.status === 200) {
+                this.$message({
+                  message: res.data.info,
+                  type: 'success',
+                });
+                this.tableData = res.data.data;
               }
             })
             .catch(err => {
@@ -726,120 +662,6 @@ export default {
     },
     resetRegister(formName) {
       this.$refs[formName].resetFields();
-    },
-    queryPatInfo(formName) {
-      //查询患者基本信息
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          let params = {};
-          params.patientId = this.patientIdForm.patientId;
-          Apis.Client.queryPatInfo(params)
-            .then(res => {
-              console.log(res);
-              if (res.status === 200) {
-                this.$message({
-                  message: res.data.info,
-                  type: 'success',
-                });
-              }
-            })
-            .catch(err => {
-              console.log(err);
-              this.$message.error(err.message);
-            });
-        }
-      });
-    },
-    patIntoHospital(formName) {
-      //病人入院
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          console.log(this.serviceConfig);
-          console.log(this.patientIdForm.patientId);
-          let serviceConfig = this.serviceConfig,
-            patientId = this.patientIdForm.patientId,
-            params = { patientId, ...serviceConfig };
-
-          Apis.Client.patIntoHospital(params)
-            .then(res => {
-              console.log(res);
-              if (res.status === 200) {
-                this.$message({
-                  message: res.data.info,
-                  type: 'success',
-                });
-              }
-            })
-            .catch(err => {
-              console.log(err);
-              this.$message.error(err.message);
-            });
-        }
-      });
-    },
-    patRegister(formName) {
-      //病人注册
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          console.log(this.serviceConfig);
-          console.log(this.patientIdForm.patientId);
-          let serviceConfig = this.serviceConfig,
-            patientId = this.patientIdForm.patientId,
-            params = { patientId, ...serviceConfig };
-
-          Apis.Client.patRegister(params)
-            .then(res => {
-              console.log(res);
-              if (res.status === 200) {
-                this.$message({
-                  message: res.data.info,
-                  type: 'success',
-                });
-              }
-            })
-            .catch(err => {
-              console.log(err);
-              this.$message.error(err.message);
-            });
-        }
-      });
-    },
-    orderSubmit(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          console.log(this.serviceConfig);
-          console.log(this.patientIdForm.patientId);
-          let serviceConfig = this.serviceConfig,
-            patientId = this.patientIdForm.patientId,
-            params = { patientId, ...serviceConfig };
-
-          Apis.Client.orderSubmit(params)
-            .then(res => {
-              console.log(res);
-              if (res.status === 200) {
-                this.$message({
-                  message: res.data.info,
-                  type: 'success',
-                });
-              }
-            })
-            .catch(err => {
-              console.log(err);
-              this.$message.error(err.message);
-            });
-        }
-      });
-    },
-    setLog(res) {
-      //把返回的数据存储在showLog对象中
-      showLog.config.data = res.config.data;
-      showLog.config.headers = res.config.headers;
-      showLog.config.method = res.config.method;
-      showLog.data.date = res.data.date;
-      showLog.headers = res.headers;
-      showLog.request.responseURL = res.request.responseURL;
-      showLog.status = res.status;
-      showLog.statusText = res.statusText;
     },
   },
 };
