@@ -18,11 +18,14 @@ class Apis {
       queryAll: this.get.bind(this, `${baseUrl}/serviceConfig/queryAll`),
       insert: this.post.bind(this, `${baseUrl}/serviceConfig/insert`),
       delete: this.post.bind(this, `${baseUrl}/serviceConfig/delete`),
+      update: this.post.bind(this, `${baseUrl}/serviceConfig/update`)
 
     };
     this.Organization = {
       getAll: this.get.bind(this, `${baseUrl}/organization/getAll`),
-      add: this.post.bind(this, `${baseUrl}/organization/add`)
+      add: this.post.bind(this, `${baseUrl}/organization/add`),
+      delete: this.post.bind(this,`${baseUrl}/organization/delete`),
+      update: this.post.bind(this, `${baseUrl}/organization/update`)
     };
     this.match = {
       query: this.get.bind(this, `${baseUrl}/match/query`),
@@ -51,12 +54,29 @@ class Apis {
             resolve(response);
           },
           err => {
-            store.commit('setLogs', err)
             reject(err);
           },
         )
         .catch(err => {
-          store.commit('setLogs', err)
+          reject(err);
+        });
+    });
+  }
+
+  post(url, params) {
+    return new Promise((resolve, reject) => {
+      axios
+        .post(url, params)
+        .then(
+          response => {
+            store.commit('setLogs', response)
+            resolve(response);
+          },
+          err => {
+            reject(err);
+          },
+        )
+        .catch(err => {
           reject(err);
         });
     });
@@ -77,27 +97,6 @@ class Apis {
           },
         )
         .catch(err => {
-          reject(err);
-        });
-    });
-  }
-
-  post(url, params) {
-    return new Promise((resolve, reject) => {
-      axios
-        .post(url, params)
-        .then(
-          response => {
-            store.commit('setLogs', response)
-            resolve(response);
-          },
-          err => {
-            store.commit('setLogs', err)
-            reject(err);
-          },
-        )
-        .catch(err => {
-          store.commit('setLogs', err)
           reject(err);
         });
     });

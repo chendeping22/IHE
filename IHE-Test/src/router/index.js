@@ -247,9 +247,9 @@ export default new Router({
           },
         },
         {
-          path: '/serviceconfig',
+          path: '/serviceConfig',
           meta: {
-            headerActive: 'serviceconfig',
+            headerActive: 'serviceConfig',
           },
           components: {
             default: () =>
@@ -257,9 +257,9 @@ export default new Router({
           },
         },
         {
-          path: '/organizationadd',
+          path: '/organizationAdd',
           meta: {
-            headerActive: 'organizationadd',
+            headerActive: 'organizationAdd',
           },
           components: {
             default: () =>

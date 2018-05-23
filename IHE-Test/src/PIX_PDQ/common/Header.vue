@@ -124,3 +124,12 @@ export default {
   margin-left: 0;
 }
 </style>
+<style>
+.el-table__body tr.current-row > td {
+  background-color: rgb(184, 217, 255);
+}
+.header-row {
+  color: #606266;
+}
+</style>
+
