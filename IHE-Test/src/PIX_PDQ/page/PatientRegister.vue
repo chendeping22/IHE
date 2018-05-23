@@ -480,13 +480,13 @@ export default {
       },
       submitForm: {
         patient: {
-          patientId: '1222',
+          patientId: '',
           namespaceId: '',
           universalId: '',
           oidType: '',
-          patFamilyName: 'EWE',
-          patGivenName: 'dsd',
-          patNameInitials: 'sds',
+          patFamilyName: '',
+          patGivenName: '',
+          patNameInitials: '',
           sex: 'M',
           birthDateTime: formatDay(
             date.getFullYear(),
@@ -515,8 +515,8 @@ export default {
           lastUpdtFacility: '',
         },
         visitInfo: {
-          patClass: 'DSASDAS',
-          asgndPointOfCare: 'DSDSDSDS',
+          patClass: '',
+          asgndPointOfCare: '',
           asgndRoom: '',
           asgndBed: '',
           asgndBuild: '',

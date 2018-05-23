@@ -1,7 +1,5 @@
 <template>
-  <div v-loading="loading"
-       element-loading-text="拼命加载中"
-       element-loading-spinner="el-icon-loading">
+  <div>
     <el-form ref="searchForm"
              :model="searchForm"
              :rules="searchRules"
@@ -85,6 +83,10 @@
           </el-col>
           <!-- 查询到数据显示 -->
           <el-table :data="tableData"
+                    v-loading="loading"
+                    element-loading-text="拼命加载中"
+                    element-loading-spinner="el-icon-loading"
+                    element-loading-background="rgba(0, 0, 0, 0.5)"
                     height="200"
                     border
                     ref="singleTable"
@@ -92,10 +94,6 @@
                     :highlight-current-row="true"
                     @current-change="handleCurrentChange"
                     style="width: 100%">
-            <!-- <el-table-column type="selection"
-                             width="48">
-                             
-            </el-table-column> -->
             <el-table-column type="index"
                              width="48">
             </el-table-column>
@@ -121,7 +119,8 @@
             </el-table-column>
             <el-table-column prop="birthDateTime"
                              width="160"
-                             label="出生日期" :formatter="birthDateFormatter">
+                             label="出生日期"
+                             :formatter="birthDateFormatter">
             </el-table-column>
             <el-table-column prop="namespaceId"
                              label="机构名">
@@ -154,7 +153,7 @@
           </div>
           <el-col :span="6">
             <el-form-item label="病人ID号"
-            :show-message='false'
+                          :show-message='false'
                           prop="patientId">
               <el-input v-model="submitForm.patientId">
               </el-input>
@@ -353,17 +352,17 @@
              status-icon
              label-width="100px"
              class="form-wrap"
-             style="padding-top:0"
-             >
+             style="padding-top:0">
       <el-row>
         <el-card class="box-card">
           <div slot="header"
                class="clearfix">
             <span>病人ID号合并</span>
           </div>
-          <el-col :span="6" >
+          <el-col :span="6">
             <el-form-item label="源病人ID号"
-                          prop="sourcePatientId" style="margin-bottom:16px">
+                          prop="sourcePatientId"
+                          style="margin-bottom:16px">
               <el-input v-model="combineForm.sourcePatientId">
               </el-input>
             </el-form-item>
@@ -444,9 +443,9 @@ export default {
         patientId: [
           {
             required: true,
-            message: "请输入patientId",
-            tigger: "blur"
-          }
+            message: '请输入patientId',
+            tigger: 'blur',
+          },
         ],
       },
       combineForm: {
@@ -457,46 +456,44 @@ export default {
         sourcePatientId: [
           {
             required: true,
-            message: "请输入源病人ID号",
-            tigger: "blur"
-          }
+            message: '请输入源病人ID号',
+            tigger: 'blur',
+          },
         ],
         targetPatientId: [
           {
             required: true,
-            message: "请输入目标病人ID号",
-            tigger: "blur"
-          }
+            message: '请输入目标病人ID号',
+            tigger: 'blur',
+          },
         ],
       },
     };
   },
   computed: {
-    ...mapGetters(['serviceConfig','organizations']),
+    ...mapGetters(['serviceConfig', 'organizations']),
   },
   created() {},
   methods: {
-    birthDateFormatter(row, column){
-        let date = new Date(row.birthDateTime)
-         return  formatDay(
-            date.getFullYear(),
-            date.getMonth() + 1,
-            date.getDate(),
-          )
+    birthDateFormatter(row, column) {
+      let date = new Date(row.birthDateTime);
+      return formatDay(date.getFullYear(), date.getMonth() + 1, date.getDate());
     },
     handleCurrentChange(val) {
       this.currentRow = val;
-      for(let item in this.submitForm){
-        if(item ==='birthDateTime'){
-          let date = new Date(this.currentRow[item])
+      for (let item in this.submitForm) {
+        if (item === 'birthDateTime') {
+          let date = new Date(this.currentRow[item]);
           this.submitForm[item] = formatDay(
             date.getFullYear(),
             date.getMonth() + 1,
             date.getDate(),
-          )
-          continue
+          );
+          continue;
         }
-        this.submitForm[item] = this.currentRow[item]? this.currentRow[item] : ''
+        this.submitForm[item] = this.currentRow[item]
+          ? this.currentRow[item]
+          : '';
       }
     },
     namespaceChange(item) {
@@ -505,47 +502,50 @@ export default {
     },
     localSearchPatInfo(formName) {
       //根据查询条件本地检索患者信息
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          let params = {};
-          for (let item in this.searchForm) {
-            params[item] = this.searchForm[item]
-              ? this.searchForm[item]
-              : undefined;
-          }
+      // this.$refs[formName].validate(valid => {
+      //   if (valid) {
+      let params = {};
+      for (let item in this.searchForm) {
+        params[item] = this.searchForm[item]
+          ? this.searchForm[item]
+          : undefined;
+      }
 
-          this.currentRow = null;
-          Apis.BasicInfo.localSearchPatInfo(params)
-            .then(res => {
-              console.log(res);
-              if (res.status === 200) {
-                this.$message({
-                  message: res.data.info,
-                  type: 'success',
-                });
-                if (
-                  typeof res.data.data !== undefined &&
-                  res.data.data.length > 0
-                ) {
-                  this.tableData = res.data.data;
-                }
-              }
-            })
-            .catch(err => {
-              console.log(err);
-              this.$message.error(err.message);
+      this.currentRow = null;
+      this.loading = true;
+      Apis.BasicInfo.localSearchPatInfo(params)
+        .then(res => {
+          this.loading = false;
+          console.log(res);
+          if (res.status === 200) {
+            this.$message({
+              message: res.data.info,
+              type: 'success',
             });
-        }
-      });
+            if (
+              typeof res.data.data !== undefined &&
+              res.data.data.length > 0
+            ) {
+              this.tableData = res.data.data;
+            }
+          }
+        })
+        .catch(err => {
+          this.loading = false;
+          console.log(err);
+          this.$message.error(err.message);
+        });
+      //   }
+      // });
     },
     localUpdate(formName) {
       //根据查询出来的信息进行患者信息的修改
-      if(!this.currentRow){
+      if (!this.currentRow) {
         this.$message.error('请在表格中选择一条数据进行修改');
       }
       this.$refs[formName].validate(valid => {
         if (valid) {
-          let params = { ...this.submitForm};
+          let params = { ...this.submitForm };
           Apis.BasicInfo.localUpdate(params)
             .then(res => {
               console.log(res);
@@ -554,6 +554,7 @@ export default {
                   message: res.data.info,
                   type: 'success',
                 });
+                this.localSearchPatInfo('searchForm');
               }
             })
             .catch(err => {
@@ -565,26 +566,26 @@ export default {
     },
     submitUpdate(formName) {
       //根据查询出来的信息进行患者信息的修改
-      if(!this.currentRow){
+      if (!this.currentRow) {
         this.$message.error('请在表格中选择一条数据进行修改');
       }
 
       this.$refs[formName].validate(valid => {
         if (
-            this.serviceConfig.pixAdminIp === '' ||
-            this.serviceConfig.pixAdminPort === '' ||
-            this.serviceConfig.receiveApp === '' ||
-            this.serviceConfig.receiveFacility === ''
-          ) {
-            configBus.$emit('paramSetform');
-            return;
+          this.serviceConfig.pixAdminIp === '' ||
+          this.serviceConfig.pixAdminPort === '' ||
+          this.serviceConfig.receiveApp === '' ||
+          this.serviceConfig.receiveFacility === ''
+        ) {
+          configBus.$emit('paramSetform');
+          return;
         }
-        
+
         if (valid) {
           let params = {};
           let serviceConfig = this.serviceConfig;
           params.connectionInfo = { ...this.serviceConfig };
-          params.patient = { ...this.submitForm }
+          params.patient = { ...this.submitForm };
           Apis.BasicInfo.submitUpdate(params)
             .then(res => {
               console.log(res);
@@ -606,7 +607,7 @@ export default {
       //本地合并患者信息
       this.$refs[formName].validate(valid => {
         if (valid) {
-          let params = { ...this.combineForm};
+          let params = { ...this.combineForm };
           Apis.BasicInfo.localCombine(params)
             .then(res => {
               console.log(res);
@@ -615,6 +616,7 @@ export default {
                   message: res.data.info,
                   type: 'success',
                 });
+                this.localSearchPatInfo('searchForm');
               }
             })
             .catch(err => {
@@ -628,19 +630,19 @@ export default {
       //提交合并患者信息到服务端
       this.$refs[formName].validate(valid => {
         if (
-            this.serviceConfig.pixAdminIp === '' ||
-            this.serviceConfig.pixAdminPort === '' ||
-            this.serviceConfig.receiveApp === '' ||
-            this.serviceConfig.receiveFacility === ''
-          ) {
-            configBus.$emit('paramSetform');
-            return;
+          this.serviceConfig.pixAdminIp === '' ||
+          this.serviceConfig.pixAdminPort === '' ||
+          this.serviceConfig.receiveApp === '' ||
+          this.serviceConfig.receiveFacility === ''
+        ) {
+          configBus.$emit('paramSetform');
+          return;
         }
 
         if (valid) {
           let params = {};
           let serviceConfig = this.serviceConfig;
-           params = { ...this.combineForm, ...this.serviceConfig };
+          params = { ...this.combineForm, ...this.serviceConfig };
           Apis.BasicInfo.submitCombine(params)
             .then(res => {
               console.log(res);
@@ -666,9 +668,6 @@ export default {
   color: #606266;
 }
 
-.el-table__body tr.current-row>td{
-      background-color: rgb(184, 217, 255);
-}
 </style>
 
 
