@@ -12,7 +12,7 @@ export default new Router({
       meta: {
         requiresAuth: false,
       },
-      component: resolve => require(['../components/error/404.vue'], resolve),
+      component: resolve => require(['../404.vue'], resolve),
     },
     {
       path: '/',
@@ -20,7 +20,7 @@ export default new Router({
     },
     {
       path: '/login',
-      component: resolve => require(['../components/page/Login.vue'], resolve),
+      component: resolve => require(['../Login.vue'], resolve),
     },
     {
       path: '*',
