@@ -19,7 +19,7 @@
           </el-menu>
         </el-col>
       </el-row>
-    <router-view name='configHeader'></router-view>
+    <router-view name='configHeader'/>
     <router-view/>
   </div>
 </template>
@@ -44,23 +44,22 @@ export default {
           index: "patientVisit",
           title: "病人就诊信息查询"
         },
-        
-        {
-          index: "serviceConfig",
-          title: "服务配置添加"
-        },
-        {
-          index: "organizationAdd",
-          title: "添加机构"
-        },
-        {
-          index: "match",
-          title: "查询匹配"
-        },
         {
           index: "clientLog",
           title: "通信日志"
         },
+        {
+          index: "service",
+          title: "系统设置"
+        },
+        // {
+        //   index: "organizationAdd",
+        //   title: "添加机构"
+        // },
+        // {
+        //   index: "match",
+        //   title: "查询匹配"
+        // },
       ],
     };
   },
