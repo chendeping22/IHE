@@ -39,7 +39,10 @@ class Apis {
       submitCombine: this.post.bind(this, `${baseUrl}/basicInfo/submitCombine`),
       getIdList: this.post.bind(this, `${baseUrl}/basicInfo/getIdList`),
       getPatientinfo: this.get.bind(this, `${baseUrl}/basicInfo/getPatientinfo`)
-    }
+    },
+    this.Server = {
+      printLog: this.post.bind(this, `${baseUrl}/server/printLog`),
+    } 
   }
 
   get(url, params) {
@@ -50,7 +53,9 @@ class Apis {
         })
         .then(
           response => {
-            store.commit('setLogs', response)
+            if(response.data.log !== undefined){
+              store.commit('setLogs', response.data.log)
+            }
             resolve(response);
           },
           err => {
@@ -69,7 +74,10 @@ class Apis {
         .post(url, params)
         .then(
           response => {
-            store.commit('setLogs', response)
+            console.log(response.data.log,response.data.log !== undefined)
+            if(response.data.log !== undefined){
+              store.commit('setLogs', response.data.log)
+            }
             resolve(response);
           },
           err => {

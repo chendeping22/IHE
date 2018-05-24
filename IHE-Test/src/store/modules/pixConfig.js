@@ -11,7 +11,7 @@ const state = {
 };
 
 const getters = {
-  getLogs: state => state.logs,
+  allLogs: state => state.logs,
   allService: state => state.serviceAll,
   organizations: state => state.organizations,
   serviceConfig: state => {
@@ -62,6 +62,9 @@ const actions = {
 const mutations = {
   setLogs(state,log){
       state.logs.push(log);
+  },
+  clearLogs(state) {
+    state.logs.splice(0,state.logs.length);
   },  
   setServiceAll(state, serviceAll) {
     state.serviceAll = serviceAll;
