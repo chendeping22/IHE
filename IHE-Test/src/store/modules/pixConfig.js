@@ -88,7 +88,11 @@ const mutations = {
     state.clientlogs.splice(0, state.clientlogs.length);
   },
   setServerLogs(state, log) {
-    state.serverLogs.push(log);
+    // '/n'返回字符串分割符
+    let arr = log.split('/n')
+    arr.forEach(function(value){
+      state.serverLogs.push(value);
+    })
   },
   clearServerLogs(state) {
     state.serverLogs.splice(0, state.serverLogs.length);
