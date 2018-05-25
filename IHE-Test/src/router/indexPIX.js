@@ -61,6 +61,16 @@ export default [{
       },
     },
     {
+      path: '/serverLog',
+      meta: {
+        headerActive: 'serverLog',
+      },
+      components: {
+        default: () =>
+          import ('../PIX_PDQ/page/ServerLog.vue'),
+      },
+    },
+    {
       path: '/service',
       meta: {
         headerActive: 'service',

@@ -1,7 +1,8 @@
 import Apis from '../../utils/apisPIX';
 
 const state = {
-  logs:[],
+  clientlogs: [],
+  serverLogs: [],
   serviceAll: [],
   organizations: [],
   pixAdminIp: '',
@@ -11,7 +12,8 @@ const state = {
 };
 
 const getters = {
-  allLogs: state => state.logs,
+  allLogs: state => state.clientlogs,
+  allServerLogs: state =>state.serverLogs,
   allService: state => state.serviceAll,
   organizations: state => state.organizations,
   serviceConfig: state => {
@@ -29,7 +31,9 @@ const getters = {
 };
 
 const actions = {
-  getServiceAll({ commit }) {
+  getServiceAll({
+    commit
+  }) {
     return new Promise((resolve, reject) => {
       Apis.ServiceConfig.queryAll()
         .then(res => {
@@ -43,7 +47,9 @@ const actions = {
         });
     });
   },
-  getOrganizationAll({ commit }) {
+  getOrganizationAll({
+    commit
+  }) {
     return new Promise((resolve, reject) => {
       Apis.Organization.getAll()
         .then(res => {
@@ -57,15 +63,36 @@ const actions = {
         });
     });
   },
+  getServerLogs({ commit }){
+    return new Promise((resolve, reject) => {
+      Apis.Server.printLog().then(res => {
+        if (res.status === 200) {
+          // console.log(typeof res.data === 'string' && res.data.trim() !== '')
+           if(typeof res.data === 'string' && res.data.trim() !== ''){
+             commit('setServerLogs', res.data);
+           }
+        }
+        resolve(res);
+      }).catch(err => {
+        reject(err);
+      })
+    });
+  }
 };
 
 const mutations = {
-  setLogs(state,log){
-      state.logs.push(log);
+  setLogs(state, log) {
+    state.clientlogs.push(log);
   },
   clearLogs(state) {
-    state.logs.splice(0,state.logs.length);
-  },  
+    state.clientlogs.splice(0, state.clientlogs.length);
+  },
+  setServerLogs(state, log) {
+    state.serverLogs.push(log);
+  },
+  clearServerLogs(state) {
+    state.serverLogs.splice(0, state.serverLogs.length);
+  },
   setServiceAll(state, serviceAll) {
     state.serviceAll = serviceAll;
   },

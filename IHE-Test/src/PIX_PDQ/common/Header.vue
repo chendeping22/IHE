@@ -49,6 +49,10 @@ export default {
           title: "通信日志"
         },
         {
+          index: "serverLog",
+          title: "服务日志"
+        },
+        {
           index: "service",
           title: "系统设置"
         },

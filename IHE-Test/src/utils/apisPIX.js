@@ -41,7 +41,7 @@ class Apis {
       getPatientinfo: this.get.bind(this, `${baseUrl}/basicInfo/getPatientinfo`)
     },
     this.Server = {
-      printLog: this.post.bind(this, `${baseUrl}/server/printLog`),
+      printLog: this.get.bind(this, `${baseUrl}/server/printLog`),
     } 
   }
 
@@ -74,7 +74,7 @@ class Apis {
         .post(url, params)
         .then(
           response => {
-            console.log(response.data.log,response.data.log !== undefined)
+            // console.log(response.data.log,response.data.log !== undefined)
             if(response.data.log !== undefined){
               store.commit('setLogs', response.data.log)
             }
